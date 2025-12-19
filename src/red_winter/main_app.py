@@ -8,6 +8,7 @@ import clipboard
 from .skill_page import SkillPage
 from .weapon_page import WeaponPage
 from .navigation_bar import NavigationBar
+from .modifier import Modifier
 
 maps = { "DLV" : "Drive Land Vehicle",
              "PAV" : "Pilot Air Vehicle",
@@ -43,9 +44,15 @@ class MainApplication(tk.Frame):
         self.pages["Weapons"] = WeaponPage(self)
 
         self.navigation = NavigationBar(self)
+        self.clipboard_echo = tk.Label(self, text='')
 
         self.navigation.pack(side='bottom')
 
+    def update_clipboard(self, discord_command):
+        
+        clipboard.copy(discord_command)
+        self.clipboard_echo.config(text=discord_command)
+        self.clipboard_echo.pack(side='bottom', after=self.navigation)
 
     def load_character_sheet(self, character_sheet_link:str) -> dict:
         """
@@ -92,16 +99,13 @@ class MainApplication(tk.Frame):
 
                 character_sheet_data["Derived Stats"][field] = value
 
-
-            # Category 2: All Skill LVL/MOD/BASEs
+            # Category 4: All Skill LVL/MOD/BASEs
             elif (field.startswith("LVL") or 
                 field.startswith("MOD") or
                 field.startswith("BASE")):
 
                 words:list[str] = field.split(" ")
                 parameter, skill_name = words[0], " ".join(words[1:])
-
-                
 
                 # Alt 1: A skill has a known mapping that it should be renamed to.  
                 if skill_name in maps.keys():
@@ -129,14 +133,14 @@ class MainApplication(tk.Frame):
                 if not (skill_name == None or skill_name == ''): # Guards against empty custom skills
                     character_sheet_data["Skills"][skill_name][parameter] = value
                     
-            # Category: Armor SP and Condition:
+            # Category 5: Armor SP and Condition:
             elif ( field.startswith("SP") or 
                 field.startswith("HPS")):
                 
                 if not field.endswith("Txt"): # Hard-coded, shouldn't load
                     pass
 
-            # Category 4: All fields related to Weapons on PG. 1
+            # Category 6: All fields related to Weapons on PG. 1
             elif field.startswith("WeaponTxt"):
                 
                 num:int = int(field[9:])
@@ -158,12 +162,12 @@ class MainApplication(tk.Frame):
 
                 character_sheet_data["Weapons"][index//5][header] = value
 
-            # Category: IP
+            # Category 7: IP
             elif field in ['IpMax','IpCurr']:
 
                 character_sheet_data[field] = value
 
-            # Category 5: Gear
+            # Category 8: Gear
             elif field.startswith("Gear"):
                 
                 text = ''.join(re.findall(r'\S', field))
@@ -171,18 +175,18 @@ class MainApplication(tk.Frame):
                 
                 character_sheet_data["Gear"][digits][text[4:8]] = value
 
-            # Category: Ammo
+            # Category 9: Ammo
             elif field in ["Ammunition"]:
                 character_sheet_data[field] = value
 
-            # Category: Cash
+            # Category 10: Cash
             elif field in ["Cash", "cash20"]: # Cash seems unused?
                 if field == "cash20":
                     character_sheet_data["Cash"]["Amount"] = value
                 else: #field == "Cash"
                     character_sheet_data["Cash"]["Notes"] = value
 
-            # Category 6: Cyberware & Additional Notes
+            # Category 11: Cyberware & Additional Notes
             elif field.startswith("TextField") or field.startswith("Text Field"):
                 digits = int(''.join(re.findall(r'\d', field)))
 
@@ -204,7 +208,7 @@ class MainApplication(tk.Frame):
                 if digits > 127: # should be: 128-133; one of the big note pages PG. 4-6
                     character_sheet_data["Additional Notes"][field] = value
 
-            # Category 7: Lifepath
+            # Category 12: Lifepath
             elif ("Friends" in field or
                 "TragicLove" in field or
                 "Enemies" in field or field == "Ex-friendo1" or # both refer to enemies
@@ -217,36 +221,36 @@ class MainApplication(tk.Frame):
                     field = "Enemies1" # more consistent naming
                 character_sheet_data["Lifepath"][field] = value
             
-            # Category: HEAT
+            # Category 13: HEAT
             elif field in ['Alias', 'RepEvents','Rep-Heat']:
                 character_sheet_data["Heat"][field] = value
 
-            # Category: Conditions
+            # Category 14: Conditions
             elif field == 'Txt_Crit':
                 character_sheet_data['Critical Injuries'] = value
             elif field == 'Txt_Addiction':
                 character_sheet_data['Addictions'] = value
 
-            # Category: Lifestyle
+            # Category 15: Lifestyle
             elif (field in ['Housing', 'Rent', 'Lifestyle', 'Fashion']):
                 character_sheet_data['Lifestyle'] = value
 
-            # Category 8: Damage Taken
+            # Category 16: Damage Taken
             elif (field in ['DMG Taken','BulletBrawl Head', 'MeleeMartial Body',
                             'MeleeMartial Head', 'BulletBrawl Body']):
                 pass # Can't currently think of any meaningful reason to load this data
 
-            # Category: Skill Totals
+            # Category 17: Skill Totals
             elif field in ['TotalStats','skillsTotal','normSkills','doubleSkills']:
                 character_sheet_data['Totals'][field] = value
 
-            # Categories: Names of "custom" skills (redundant)
+            # Category 18: Names of "custom" skills (redundant)
             elif ('LocalExpert' in field or 
                 'Science' in field or
                 'PlayInstrument' in field or
                 'Lang' in field):
                 
-                player_defined_fields.append(field) # basically just don't print these as uncategorized
+                player_defined_fields.append(field)
 
             # Uncategorized: print as debug
             else:
@@ -273,27 +277,30 @@ class MainApplication(tk.Frame):
         return dict(character_sheet_data)
     
     #TODO rewrite all these
-    def basic_skill_check(self, base_value, skill_name, modifiers=None):
+    def basic_skill_check(self, skill_name, modifier: Modifier=Modifier()) -> None:
+        """
+        Copies the Discord command for a particular skill check to the clipboard
+        
+        :param affect: The skill/action we are checking
+        :param modifier: Collection of Modifiers currently applied
+        """
+        magnitudes, reasons = modifier.get_affect(skill_name)
+        base = self.character_sheet["Skills"][skill_name]["BASE"]
 
-        #TODO nab additional modifiers based on... conditions
+        if len(reasons) > 0:
+            reasons = ' (' + reasons + ')'
 
-        if modifiers == None:
-            modifiers = []
-        modifiers = "".join(modifiers)
-
-        discord_command = f"!r 1d10+{str(base_value)}{modifiers} {skill_name}"
-        clipboard.copy(discord_command)
+        discord_command = f"!r 1d10+{base}{magnitudes} {skill_name}{reasons}"
+        self.update_clipboard(discord_command)
 
     def damage_roll(self, roll:str, weapon:str, modifiers=None):
-
-        #TODO Handle things like a chain of mods +1-1-8
 
         if modifiers == None:
             modifiers = []
         modifiers = "".join(modifiers)
 
         discord_command = f"!r {roll+modifiers} Damage w/ {weapon}"
-        clipboard.copy(discord_command)
+        self.update_clipboard(discord_command)
 
     def weapon_roll(self, weapon:str, modifiers=None):
 
@@ -352,12 +359,18 @@ class MainApplication(tk.Frame):
 
 
     def determine_stat_group(self, skill_name: str, df: pd.DataFrame) -> str:
+        """
+        :param skill_name: The name of the skill to lookup
+        :param df: the data set of skills and their mappings to stats
+        
+        Returns:
+            The stat that is associated with the given skill_name.
+        """
         bucket = "UNK"
         if skill_name in list(df["SkillName"]):
             bucket = df.loc[df["SkillName"] == skill_name, "AlignedStat"].iloc[0]
             bucket = bucket.strip()
         else:
-            pass
             print(f"{skill_name} was not found :()")
         return bucket
 

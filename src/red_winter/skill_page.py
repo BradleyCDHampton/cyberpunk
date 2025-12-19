@@ -2,7 +2,6 @@
 import tkinter as tk
 import pandas as pd
 from tkinter import font
-import regex as re
 from collections import defaultdict
 
 class SkillPage(tk.Frame):
@@ -35,7 +34,7 @@ class SkillPage(tk.Frame):
             for skill_name in skills:
                 value = self.parent.character_sheet["Skills"][skill_name]["BASE"]
                 tk.Button(self, text=skill_name + f" ({value})", font=light_font,
-                          command=lambda v=value, s=skill_name: self.parent.basic_skill_check(v, s),
+                          command=lambda s=skill_name: self.parent.basic_skill_check(s),
                           bg='#B45617', fg="#0A0228").grid(row=i//cols, column=i%cols, sticky="ew")
                 i+=1
             i = (i + cols - 1)//cols * cols 
