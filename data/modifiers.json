@@ -1,0 +1,364 @@
+{
+    "Seriously Wounded" : {
+        "type" : "HP",
+        "affects" : {
+            "All Actions" : -2
+        }
+    },
+    "Mortally Wounded" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "All Actions" : -4,
+            "MOVE" : -6
+        }
+    },
+    "Dismembered Arm" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Death Save Penalty" : 1 
+        }
+    },
+    "Dismembered Hand" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Death Save Penalty" : 1 
+        }
+    },
+    "Collapsed Lung" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Death Save Penalty" : 1,
+            "MOVE" : -2
+        }
+    },
+    "Broken Leg" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "MOVE" : -4
+        }
+    },
+    "Torn Muscle" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Melee Weapon" : -2 
+        }
+    },
+    "Spinal Injury" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Death Save Penalty" : 1 
+        }
+    },
+    "Crushed Fingers" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "All Actions" : -4 
+        }
+    },
+    "Dismembered Leg" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Death Save Penalty" : 1,
+            "MOVE" : -6
+        }
+    },
+    "Lost Eye" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Ranged" : -4,
+            "Perception" : -4,
+            "Death Save Penalty" : 1
+        }
+    },
+    "Brain Injury" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "All Actions" : -2,
+            "Death Save Penalty" : 1
+        }
+    },
+    "Damaged Eye" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Ranged" : -2,
+            "Perception" : -2
+        }
+    },
+    "Concussion" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "All Actions" : -2
+        }
+    },
+    "Whiplash" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Death Save Penalty" : 1 
+        }
+    },
+    "Cracked Skull" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Death Save Penalty" : 1 
+        }
+    },
+    "Damaged Ear" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Perception" : -2 
+        }
+    },
+    "Crushed Windpipe" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Death Save Penalty" : 1 
+        }
+    },
+    "Lost Ear" : {
+        "type" : "Critical Injury",
+        "affects" : {
+            "Perception" : -4,
+            "Death Save Penalty" : 1 
+        }
+    },
+    "Black Lace" : {
+        "type" : "Drug",
+        "ignores" : ["Seriously Wounded", "Addiction: Black Lace"]
+    },
+    "Addiction: Black Lace" : {
+        "type" : "Addiction",
+        "affects" : {
+            "REF" : -2
+        }
+    },
+    "Boost" : {
+        "type" : "Drug",
+        "ignores" : ["Addiction: Boost"],
+        "affects" : {
+            "INT" : -2
+        }
+    },
+    "Addiction: Boost" : {
+        "type" : "Addiction",
+        "affects" : {
+            "INT" : -2
+        }
+    },
+    "Smash" : {
+        "type" : "Drug",
+        "ignores" : ["Addiction: Smash"],
+        "affects" : {
+            "Dance" : 2,
+            "Contortionist" : 2,
+            "Conversation" : 2,
+            "Human Perception" : 2,
+            "Persuasion" : 2,
+            "Acting" : 2
+        }
+    },
+    "Addiction: Smash" : {
+        "type" : "Addiction",
+        "affects" : {
+            "Dance" : -2,
+            "Contortionist" : -2,
+            "Conversation" : -2,
+            "Human Perception" : -2,
+            "Persuasion" : -2,
+            "Acting" : -2
+        }
+    },
+    "Synthcoke" : {
+        "type" : "Drug",
+        "affects" : {
+            "REF" : 1
+        }
+    },
+    "Addiction: Synthcoke" : {
+        "type" : "Addiction",
+        "affects" : {
+            "REF" : -2
+        }
+    },
+    "Berserker" : {
+        "type" : "Drug",
+        "halved" : ["Seriously Wounded", "Mortally Wounded"]
+    },
+    "Addiction: Berserker" : {
+        "type" : "Addiction",
+        "affects" : {
+            "Death Save Penalty" : 1
+        }
+    },
+    "Prime Time" : {
+        "type" : "Drug",
+        "affects" : {
+            "COOL" : 2,
+            "WILL" : 2
+        }
+    },
+    "Addiction: Prime Time" : {
+        "type" : "Addiction",
+        "affects" : {
+            "COOL" : -2
+        }
+    },
+    "Sixgun" : {
+        "type" : "Drug",
+        "affects" : {
+            "REF" : -2,
+            "MOVE" : -2,
+            "Speed" : 2
+        }
+    },
+    "Addiction: Sixgun" : {
+        "type" : "Addiction",
+        "affects" : {
+            "Speed" : -2
+        }
+    },
+    "Timewarp" : {
+        "type" : "Drug",
+        "affects" : {
+            "Initiative" : 3
+        }
+    },
+    "Addiction: Timewarp" : {
+        "type" : "Addiction",
+        "affects" : {
+            "Initiative" : -2
+        }
+    },
+    "Stim" : {
+        "type" : "Pharma",
+        "ignores" : ["Seriously Wounded"]
+    },
+    "Veritas" : {
+        "type" : "Pharma",
+        "affects" : {
+            "Acting" : -5,
+            "Concentration" : -5,
+            "Conversation" : -5,
+            "Deduction" : -5,
+            "Human Perception" : -5,
+            "Persuasion" : -5
+        }
+    },
+    "Zonik" : {
+        "type" : "Drug",
+        "affects" : {
+            "MOVE" : 2
+        }
+    },
+    "Addiction: Zonik" : {
+        "type" : "Addiction",
+        "affects" : {
+            "MOVE" : -2
+        }
+    },
+    "Xstachrome" : {
+        "type" : "Drug"
+    },
+    "Addiction: Xstrachrome" : {
+        "type" : "Addiction"
+    },
+    "Roid Rage" : {
+        "ignores" : ["Addiction: Roid Rage"],
+        "affects" : {
+            "BODY Damage Category" : 1
+        }
+    },
+    "Addiction: Roid Rage" : {
+        "type" : "Addiction",
+        "affects" : {
+            "BODY Damage Category" : -1
+        }
+    },
+    "Wheelhaus" : {
+        "type" : "Drug",
+        "ignores" : ["Addiction: Wheelhaus"],
+        "affects": {
+            "Drive Land Vehicle" : 2
+        }
+    },
+    "Addiction: Wheelhaus" : {
+        "type" : "Addiction",
+        "affects": {
+            "Drive Land Vehicle" : -2,
+            "Pilot Air Vehicle" : -4,
+            "Pilot Sea Vehicle" : -4
+        }
+    },
+    "Tangerine Clouds" : {
+        "type" : "Drug",
+        "ignores" : ["Addiction: Tangerine Clouds"],
+        "affects" : {
+            "Composition" : 2,
+            "Paint/Draw/Sculpt" : 2,
+            "Photography & Film" : 2,
+            "Play Instrument" : 2,
+            "Concentration" : -2 
+        }
+    },
+    "Addiction: Tangerine Clouds" : {
+        "type" : "Addiction",
+        "affects" : {
+            "Composition" : -2,
+            "Paint/Draw/Sculpt" : -2,
+            "Photography & Film" : -2,
+            "Play Instrument" : -2,
+            "COOL" : -1
+        }
+    },
+    "Double or Nothing" : {
+        "type" : "Drug"
+    },
+    "Addiction: Blackout" : {
+        "type" : "Addiction",
+        "affects" : {
+            "INT" : -1
+        }
+    },
+    "Hound Dog" : {
+        "type" : "Drug",
+         "affects" : {
+            "Tracking" : 5
+        }
+    },
+    "Limitless" : {
+        "type" : "Drug",
+        "affects" : {
+            "All Actions" : 5
+        }
+    },
+    "Addiction: Limitless" : {
+        "type" : "Addiction",
+        "affects" : {
+            "Death Save Penalty" : 1
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
