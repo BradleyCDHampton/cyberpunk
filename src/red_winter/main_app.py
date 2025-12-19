@@ -3,12 +3,11 @@ import tkinter as tk
 from collections import defaultdict
 import re
 import pandas as pd
+import clipboard
 
 from .skill_page import SkillPage
 from .weapon_page import WeaponPage
 from .navigation_bar import NavigationBar
-
-from .utils import determine_stat_group
 
 maps = { "DLV" : "Drive Land Vehicle",
              "PAV" : "Pilot Air Vehicle",
@@ -41,7 +40,7 @@ class MainApplication(tk.Frame):
         self.pages = {}
 
         self.pages["Skills"] = SkillPage(self)
-        #self.pages["Weapons"] = WeaponPage(self)
+        self.pages["Weapons"] = WeaponPage(self)
 
         self.navigation = NavigationBar(self)
 
@@ -52,6 +51,11 @@ class MainApplication(tk.Frame):
         """
             Parses the entries of a linked character sheet, and
             organizes its contents into a dictionary.
+
+            :param character_sheet_link: The path to the character sheet to load
+
+            Returns:
+                The dictionary
         """
         character_sheet = PdfReader(character_sheet_link)
         test_fields = character_sheet.get_form_text_fields()
@@ -142,7 +146,7 @@ class MainApplication(tk.Frame):
                 
                 match (index % 5):
                     case 0:
-                        header = "weapon"      
+                        header = "Name"      
                     case 1:
                         header = "DMG"  
                     case 2:
@@ -150,7 +154,7 @@ class MainApplication(tk.Frame):
                     case 3:
                         header = "ROF" 
                     case 4:
-                        header = "NOTES"
+                        header = "Notes"
 
                 character_sheet_data["Weapons"][index//5][header] = value
 
@@ -254,19 +258,108 @@ class MainApplication(tk.Frame):
 
         for skill_name in character_sheet_data['Skills'].keys():
 
-            print(skill_name)
-            stat_group = determine_stat_group(skill_name, stat_associations)
+            #print(skill_name)
+            stat_group = self.determine_stat_group(skill_name, stat_associations)
 
             # Alt Path: The skill is player-defined (fill-in-blanks)
             if stat_group == "UNK": 
                 for field in player_defined_fields:
                     if test_fields[field] == skill_name:
                         canon_skill_name = field[4:-1]
-                        stat_group = determine_stat_group(canon_skill_name, stat_associations)
+                        stat_group = self.determine_stat_group(canon_skill_name, stat_associations)
 
             character_sheet_data['Skills'][skill_name]["STAT"] = stat_group
                 
         return dict(character_sheet_data)
+    
+    #TODO rewrite all these
+    def basic_skill_check(self, base_value, skill_name, modifiers=None):
+
+        #TODO nab additional modifiers based on... conditions
+
+        if modifiers == None:
+            modifiers = []
+        modifiers = "".join(modifiers)
+
+        discord_command = f"!r 1d10+{str(base_value)}{modifiers} {skill_name}"
+        clipboard.copy(discord_command)
+
+    def damage_roll(self, roll:str, weapon:str, modifiers=None):
+
+        #TODO Handle things like a chain of mods +1-1-8
+
+        if modifiers == None:
+            modifiers = []
+        modifiers = "".join(modifiers)
+
+        discord_command = f"!r {roll+modifiers} Damage w/ {weapon}"
+        clipboard.copy(discord_command)
+
+    def weapon_roll(self, weapon:str, modifiers=None):
+
+        weapons_list = pd.read_csv(r"data\weapons.csv")
+
+        for i in range(len(weapon)):
+            weapons_list = weapons_list[ 
+                weapons_list["name"].str.startswith(weapon[:i+1], na=False)
+            ]
+            #print(weapons_list)
+            if len(weapons_list) <= 1:
+                break
+
+        if len(weapons_list) == 0:
+            print(f"can't find {weapon}")
+            return
+
+        #MAP WEAPON TYPES TO SKILLS
+
+        skills_for_weapons = {
+            'Medium Pistol' : 'Handgun',
+            'Heavy Pistol' : 'Handgun',
+            'Very Heavy Pistol' : 'Handgun',
+            'SMG' : 'Handgun',
+            'Heavy SMG' : 'Handgun',
+            'Shotgun': 'ShoulderArms',
+            'Assault Rifle' : 'ShoulderArms',
+            'Sniper Rifle' : 'ShoulderArms',
+            'Bow' : 'Archery',
+            'Grenade Launcher' : 'HeavyWeapons',
+            'Rocket Launcher' 'HeavyWeapons'
+            'Light Melee' : 'Melee',
+            'Medium Melee' : 'Melee',
+            'Heavy Melee' : 'Melee',
+            'Very Heavy Melee' : 'Melee',
+            'Thrown Weapon' : 'Melee',
+            'Crossbow' : 'Archery'
+        }
+
+        skill_name = skills_for_weapons[weapons_list['type'].iloc[0]]
+        character_sheet = PdfReader(self.character_sheet_link)
+        fields = character_sheet.get_form_text_fields()
+
+        base = fields[f"BASE {skill_name}"]
+
+        #Modifier List
+        if modifiers == None:
+            modifiers = []
+        if "(EQ)" in weapon: # Excellent Quality -> +1
+            modifiers.append("+1")
+
+        modifiers = "".join(modifiers)
+
+        discord_command = f"!r 1d10+{base}{modifiers} Attack w/ {weapon}"
+        clipboard.copy(discord_command)
+
+
+    def determine_stat_group(self, skill_name: str, df: pd.DataFrame) -> str:
+        bucket = "UNK"
+        if skill_name in list(df["SkillName"]):
+            bucket = df.loc[df["SkillName"] == skill_name, "AlignedStat"].iloc[0]
+            bucket = bucket.strip()
+        else:
+            pass
+            print(f"{skill_name} was not found :()")
+        return bucket
 
 
 
