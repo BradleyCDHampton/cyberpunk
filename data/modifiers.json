@@ -169,6 +169,7 @@
     },
     "Synthcoke" : {
         "type" : "Drug",
+        "ignores" : ["Addiction: Synthcoke"],
         "affects" : {
             "REF" : 1
         }
@@ -255,13 +256,14 @@
             "MOVE" : -2
         }
     },
-    "Xstachrome" : {
+    "Xstrachrome" : {
         "type" : "Drug"
     },
     "Addiction: Xstrachrome" : {
         "type" : "Addiction"
     },
     "Roid Rage" : {
+        "type" : "Drug",
         "ignores" : ["Addiction: Roid Rage"],
         "affects" : {
             "BODY Damage Category" : 1
