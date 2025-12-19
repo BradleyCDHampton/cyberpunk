@@ -1,0 +1,13 @@
+name,class,perception,speed,attack,defense,rez,effect,dice
+Asp,Anti-Personnel Black ICE,4,6,2,2,15,"Destroys a single Program installed on the enemy Netrunner's Cyberdeck at random.",
+Giant,Anti-Personnel Black ICE,2,2,8,4,25,"Does 3d6 damage direct to an enemy Netrunner's brain. The Netrunner is forcibly and unsafely Jacked Out of their current Netrun. They suffer the effect of all Rezzed enemy Black ICE they've encountered in the Architecture as they leave, not including the Giant.",3d6
+Hellhound,Anti-Personnel Black ICE,6,6,6,2,20,"Does 2d6 damage direct to the Netrunner's brain. Unless insulated, their Cyberdeck catches fire along with their clothing. Until they spend a Meat Action to put themselves out, they take 2 damage to their HP whenever they end their Turn. Multiple instances of this effect cannot stack.",2d6
+Kraken,Anti-Personnel Black ICE,6,2,8,4,30,"Does 3d6 damage direct to an enemy Netrunner's brain. Until the end of the Netrunner's next Turn, the Netrunner cannot progress deeper into the Architecture or Jack Out safely (The Netrunner can still perform an unsafe Jack Out).",3d6
+Liche,Anti-Personnel Black ICE,8,2,6,2,25,"Enemy Netrunner's INT, REF, and DEX are each lowered by 1d6 for the next hour (minimum 1). The effects are largely psychosomatic and leave no permanent effects.",
+Raven,Anti-Personnel Black ICE,6,4,4,2,15,"Derezzes a single Defender Program the enemy Netrunner has Rezzed at random, then deals 1d6 damage direct to the Netrunner's brain.",1d6
+Scorpion,Anti-Personnel Black ICE,2,6,2,2,15,"Enemy Netrunner's MOVE is lowered by 1d6 for the next hour (minimum 1). The effects are largely psychosomatic and leave no permanent effects.",1d6
+Skunk,Anti-Personnel Black ICE,2,4,4,2,10,"Until this Program is Derezzed, an enemy Netrunner hit by this Effect makes all Slide Checks at a -2. Each Skunk Black ICE can only affect a single Netrunner at a time, but the effects of multiple Skunks can stack.",
+Wisp,Anti-Personnel Black ICE,4,4,4,2,15,"Does 1d6 damage direct to the enemy Netrunner's brain and lowers the amount of total NET Actions the Netrunner can accomplish on their next Turn by 1 (minimum 2).",1d6
+Dragon,Anti-Program Black ICE,6,4,6,6,30,"Deals 6d6 damage to a Program. If this damage would be enough to Derezz the Program, it is instead Destroyed.",6d6
+Killer,Anti-Program Black ICE,4,8,6,2,20,"Deals 4d6 damage to a Program. If this damage would be enough to Derezz the Program, it is instead Destroyed.",4d6
+Sabertooth,Anti-Program Black ICE,8,6,6,2,25,"Deals 6d6 damage to a Program. If this damage would be enough to Derezz the Program, it is instead Destroyed.",6d6

@@ -1,0 +1,16 @@
+name,class,attack,defense,rez,effect,dice,augments
+Eraser,Booster,0,0,7,"Increases all Cloak Checks you make by +2 as long as this Program remains Rezzed.",,cloak2
+See Ya,Booster,0,0,7,"Increases all Pathfinder Checks you make by +2 as long as this Program remains Rezzed.",,pathfinder2
+Speedy Gonzalvez,Booster,0,0,7,"Increases your Speed by +2 as long as this Program remains Rezzed.",,speed2
+Worm,Booster,0,0,7,"Increases all Backdoor Checks you make by +2 as long as this Program remains Rezzed.",,backdoor2
+Armor,Defender,0,0,7,"Lowers all brain damage you would receive by 4 as long as this Program remains Rezzed.",,defense4
+Flak,Defender,0,0,7,"Reduces the ATK of all Non-Black ICE Attacker Programs run against you to 0 as long as this Program remains Rezzed.",,
+Shield,Defender,0,0,7,"Stops the first successful Non-Black ICE Program Effect from dealing brain damage.",,
+Banhammer,Anti-Program Attacker,1,0,0,"Does 3d6 REZ to a Non-Black ICE Program--or 2d6 REZ to a Black ICE Program.",2d6,
+Sword,Anti-Program Attacker,1,0,0,"Does 3d6 REZ to a Black ICE Program, or 2d6 REZ to a Non-Black ICE Program.",3d6,
+DeckKRASH,Anti-Personnel Attacker,0,0,0,"Enemy Netrunner is forcibly and unsafely Jacked Out of the Architecture, suffering the effect of all Rezzed enemy Black ICE they've encountered in the Architecture as they leave.",,
+Hellbolt,Anti-Personnel Attacker,2,0,0,"Does 2d6 Damage direct to the enemy Netrunner's brain. Multiple instances of this effect cannot stack.",2d6,
+Nervescrub,Anti-Personnel Attacker,0,0,0,"Enemy Netrunner's INT, REF, and DEX are each lowered by 1d6 for the next hour (minimum 1).",1d6,
+Poison Flatline,Anti-Personnel Attacker,0,0,0,"Destroys a single Non-Black ICE Program installed on the Netrunner target's Cyberdeck at random.",,
+Superglue,Anti-Personnel Attacker,2,0,0,"Enemy Netrunner cannot progress deeper into the Architecture or Jack Out safely for 1d6 Rounds.",1d6,
+Vrizzbolt,Anti-Personnel Attacker,1,0,0,"Does 1d6 Damage direct to a Netrunner's brain and lowers the amount of total NET Actions the Netrunner can accomplish on their next Turn by 1 (minimum 2).",1d6,
