@@ -48,8 +48,13 @@ class MainApplication(tk.Frame):
 
         self.navigation.pack(side='bottom')
 
-    def update_clipboard(self, discord_command):
+    def update_clipboard(self, discord_command: str) -> None:
+        """
+        Writes a discord command to the clipboard, and shows the
+        command that was copied to the clipboard at the bottom of the window.
         
+        :param discord_command: The command to be copied/output
+        """
         clipboard.copy(discord_command)
         self.clipboard_echo.config(text=discord_command)
         self.clipboard_echo.pack(side='bottom', after=self.navigation)
