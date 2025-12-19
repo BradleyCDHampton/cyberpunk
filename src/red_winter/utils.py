@@ -83,13 +83,12 @@ def weapon_roll(weapon:str, modifiers=None):
     clipboard.copy(discord_command)
 
 
-
-
 def determine_stat_group(skill_name: str, df: pd.DataFrame) -> str:
     bucket = "UNK"
     if skill_name in list(df["SkillName"]):
         bucket = df.loc[df["SkillName"] == skill_name, "AlignedStat"].iloc[0]
         bucket = bucket.strip()
     else:
+        pass
         print(f"{skill_name} was not found :()")
     return bucket

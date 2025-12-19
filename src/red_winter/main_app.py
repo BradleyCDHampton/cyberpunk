@@ -2,6 +2,7 @@ from PyPDF2 import PdfReader
 import tkinter as tk
 from collections import defaultdict
 import re
+import pandas as pd
 
 from .skill_page import SkillPage
 from .weapon_page import WeaponPage
@@ -40,12 +41,11 @@ class MainApplication(tk.Frame):
         self.pages = {}
 
         self.pages["Skills"] = SkillPage(self)
-        self.pages["Weapons"] = WeaponPage(self)
+        #self.pages["Weapons"] = WeaponPage(self)
 
         self.navigation = NavigationBar(self)
 
         self.navigation.pack(side='bottom')
-
 
 
     def load_character_sheet(self, character_sheet_link:str) -> dict:
@@ -56,6 +56,7 @@ class MainApplication(tk.Frame):
         character_sheet = PdfReader(character_sheet_link)
         test_fields = character_sheet.get_form_text_fields()
 
+        player_defined_fields:list[str] = []
         character_sheet_data = defaultdict(dict)
 
         for category in ['Skills','Weapons','Gear','Cyberware','Totals']:
@@ -96,6 +97,8 @@ class MainApplication(tk.Frame):
                 words:list[str] = field.split(" ")
                 parameter, skill_name = words[0], " ".join(words[1:])
 
+                
+
                 # Alt 1: A skill has a known mapping that it should be renamed to.  
                 if skill_name in maps.keys():
                     skill_name = maps[skill_name]
@@ -113,6 +116,11 @@ class MainApplication(tk.Frame):
                         skill_name = test_fields[variant_2]
                     else:
                         skill_name = test_fields[skill_name]
+                else: # Could potentially need to separate words
+                    skill_name = skill_name.split()[-1]
+                    pattern = re.compile(r"[A-Z][a-z]*")
+                    variant_1 = re.findall(pattern, skill_name)
+                    skill_name = " ".join(variant_1)
         
                 if not (skill_name == None or skill_name == ''): # Guards against empty custom skills
                     character_sheet_data["Skills"][skill_name][parameter] = value
@@ -126,8 +134,25 @@ class MainApplication(tk.Frame):
 
             # Category 4: All fields related to Weapons on PG. 1
             elif field.startswith("WeaponTxt"):
-                pass
-                #weapon_fields.append((field, value))
+                
+                num:int = int(field[9:])
+                index = num-1 if num < 35 else num
+
+                header:str = ''
+                
+                match (index % 5):
+                    case 0:
+                        header = "weapon"      
+                    case 1:
+                        header = "DMG"  
+                    case 2:
+                        header = "Ammo"   
+                    case 3:
+                        header = "ROF" 
+                    case 4:
+                        header = "NOTES"
+
+                character_sheet_data["Weapons"][index//5][header] = value
 
             # Category: IP
             elif field in ['IpMax','IpCurr']:
@@ -217,12 +242,30 @@ class MainApplication(tk.Frame):
                 'PlayInstrument' in field or
                 'Lang' in field):
                 
-                continue # basically just don't print these as uncategorized
+                player_defined_fields.append(field) # basically just don't print these as uncategorized
 
             # Uncategorized: print as debug
             else:
                 print(f"{field} \t\t {value}")
 
+        # SKILLs/STATS
+        stat_associations = pd.read_csv(r"data/skills.csv")
+        assert(len(stat_associations) > 10)
+
+        for skill_name in character_sheet_data['Skills'].keys():
+
+            print(skill_name)
+            stat_group = determine_stat_group(skill_name, stat_associations)
+
+            # Alt Path: The skill is player-defined (fill-in-blanks)
+            if stat_group == "UNK": 
+                for field in player_defined_fields:
+                    if test_fields[field] == skill_name:
+                        canon_skill_name = field[4:-1]
+                        stat_group = determine_stat_group(canon_skill_name, stat_associations)
+
+            character_sheet_data['Skills'][skill_name]["STAT"] = stat_group
+                
         return dict(character_sheet_data)
 
 
