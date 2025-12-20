@@ -311,7 +311,7 @@ class MainApplication(tk.Frame):
                 for field in player_defined_fields:
                     if test_fields[field] == skill_name:
                         canon_skill_name = field[4:-1] if field.startswith("Txt") else field[:-1]
-                        print(f"Canon: {canon_skill_name}")
+                        #print(f"Canon: {canon_skill_name}")
                         stat_group = self.determine_stat_group(canon_skill_name, stat_associations)
 
             character_sheet_data['Skills'][skill_name]["STAT"] = stat_group
@@ -321,10 +321,9 @@ class MainApplication(tk.Frame):
 
     def basic_skill_check(self, skill_name) -> None:
         """
-        Copies the Discord command for a particular skill check to the clipboard
+        Copies the Discord command for a particular skill check to the clipboard.
         
-        :param affect: The skill/action we are checking
-        :param modifier: Collection of Modifiers currently applied
+        :param skill_name: The skill/action we are checking
         """
         stat_name = self.character_sheet["Skills"][skill_name]["STAT"]
         drug_modifier = self.pages["Drugs"].get_active_effects()
@@ -354,74 +353,6 @@ class MainApplication(tk.Frame):
 
         discord_command = f"!r 1d10+{base}{magnitudes} {skill_name}{reasons}"
         self.update_clipboard(discord_command)
-
-
-    #TODO rewrite this; not using new structure... have this handled by Weapon?
-    def damage_roll(self, roll:str, weapon:str, modifiers=None):
-
-        if modifiers == None:
-            modifiers = []
-        modifiers = "".join(modifiers)
-
-        discord_command = f"!r {roll+modifiers} Damage w/ {weapon}"
-        self.update_clipboard(discord_command)
-
-    #TODO rewrite this; not using new structure
-    def weapon_roll(self, weapon:str, modifiers=None):
-
-        weapons_list = pd.read_csv(r"data\weapons.csv")
-
-        for i in range(len(weapon)):
-            weapons_list = weapons_list[ 
-                weapons_list["name"].str.startswith(weapon[:i+1], na=False)
-            ]
-            #print(weapons_list)
-            if len(weapons_list) <= 1:
-                break
-
-        if len(weapons_list) == 0:
-            print(f"can't find {weapon}")
-            return
-
-        #MAP WEAPON TYPES TO SKILLS
-
-        skills_for_weapons = {
-            'Medium Pistol' : 'Handgun',
-            'Heavy Pistol' : 'Handgun',
-            'Very Heavy Pistol' : 'Handgun',
-            'SMG' : 'Handgun',
-            'Heavy SMG' : 'Handgun',
-            'Shotgun': 'ShoulderArms',
-            'Assault Rifle' : 'ShoulderArms',
-            'Sniper Rifle' : 'ShoulderArms',
-            'Bow' : 'Archery',
-            'Grenade Launcher' : 'HeavyWeapons',
-            'Rocket Launcher' 'HeavyWeapons'
-            'Light Melee' : 'Melee',
-            'Medium Melee' : 'Melee',
-            'Heavy Melee' : 'Melee',
-            'Very Heavy Melee' : 'Melee',
-            'Thrown Weapon' : 'Melee',
-            'Crossbow' : 'Archery'
-        }
-
-        skill_name = skills_for_weapons[weapons_list['type'].iloc[0]]
-        character_sheet = PdfReader(self.character_sheet_link)
-        fields = character_sheet.get_form_text_fields()
-
-        base = fields[f"BASE {skill_name}"]
-
-        #Modifier List
-        if modifiers == None:
-            modifiers = []
-        if "(EQ)" in weapon: # Excellent Quality -> +1
-            modifiers.append("+1")
-
-        
-        modifiers = "".join(modifiers)
-
-        discord_command = f"!r 1d10+{base}{modifiers} Attack w/ {weapon}"
-        clipboard.copy(discord_command)
 
 
     def determine_stat_group(self, skill_name: str, df: pd.DataFrame) -> str:
