@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from tkinter import font
 from collections import defaultdict
@@ -61,7 +60,9 @@ class SkillPage(tk.Frame):
                 ).grid(row=0, column=0, columnspan=2, sticky="ew",
             )
             
+
             light_font = font.Font(family='Segoe UI', size=9)
+            bold_font = font.Font(family='Segoe UI', size=9, weight='bold')
             # Generate buttons for each of the stat's skills
             i:int = 2
 
@@ -73,7 +74,11 @@ class SkillPage(tk.Frame):
 
             for skill_name in skills:
                 value = self.parent.character_sheet["Skills"][skill_name]["BASE"]
-                tk.Button(stat_frames[stat], text=skill_name + f" ({value})", font=light_font,
+            
+                # Bold font if the BASE is 10 or higher
+                my_font = light_font if int(value) < 10 else bold_font
+
+                tk.Button(stat_frames[stat], text=skill_name + f" ({value})", font=my_font,
                           width=25, height=1,
                           command=lambda s=skill_name: self.parent.basic_skill_check(s),
                           bg=color, fg="#0A0228").grid(row=i//2, column=i%2, sticky="ew")
