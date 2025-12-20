@@ -13,7 +13,6 @@ class NavigationBar(tk.Frame):
 
         i = 0
         for page_name, frame in self.parent.pages.items():
-
             tk.Button(self, text=page_name,
                       command=lambda f=frame: switch_tab_to(f)).grid(row=0, column=i)
             i += 1

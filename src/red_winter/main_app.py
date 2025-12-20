@@ -41,21 +41,12 @@ class MainApplication(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
         # Initialize Character Sheet
-
-        file_path = filedialog.askopenfilename(
-            title="Select a file",
-            filetypes=[("Pdfs", "*.pdf"), ("All Files", "*.*")]
-        )
-        if file_path:
-            self.character_sheet_link = file_path
-        else:
-            self.character_sheet_link = character_sheet_link
-
+        self.character_sheet_link = character_sheet_link
         self.character_sheet = self.load_character_sheet(self.character_sheet_link)
 
         self.pages = {}
 
-        self.pages["Save/Load"] = FilePage(self) 
+        #self.pages["Load"] = tk.Button(self, text="Load")
         self.pages["Skills"] = SkillPage(self)
         self.pages["Weapons"] = WeaponPage(self)
         self.pages["Drugs"] = DrugPage(self)
@@ -64,7 +55,36 @@ class MainApplication(tk.Frame):
         self.navigation = NavigationBar(self)
         self.clipboard_echo = tk.Label(self, text='')
 
+        self.pages["Skills"].pack()
+
+        tk.Button(self.navigation, text="Load", command=self.load_new).grid(row=0, column=5)
         self.navigation.pack(side='bottom')
+
+    def load_new(self):
+        file_path = filedialog.askopenfilename(
+            title="Select a file",
+            filetypes=[("Pdfs", "*.pdf"), ("All Files", "*.*")]
+        )
+        if file_path:
+
+            for page in self.pages.values():
+                page.pack_forget()
+            self.navigation.pack_forget()
+
+            self.character_sheet_link = file_path
+            self.character_sheet = self.load_character_sheet(self.character_sheet_link)
+
+            self.pages["Skills"] = SkillPage(self)
+            self.pages["Weapons"] = WeaponPage(self)
+            self.pages["Drugs"] = DrugPage(self)
+            self.pages["Injuries"] = InjuryPage(self)
+            self.navigation = NavigationBar(self)
+
+            self.pages["Skills"].pack()
+            self.navigation.pack(side='bottom')
+            tk.Button(self.navigation, text="Load", command=self.load_new).grid(row=0, column=5)
+
+
 
     def update_clipboard(self, discord_command: str) -> None:
         """
