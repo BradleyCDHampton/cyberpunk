@@ -105,6 +105,7 @@ class MainApplication(tk.Frame):
         """
         character_sheet = PdfReader(character_sheet_link)
         test_fields = character_sheet.get_form_text_fields()
+        #print(test_fields.keys())
 
         player_defined_fields:list[str] = []
         character_sheet_data = defaultdict(dict)
@@ -299,6 +300,7 @@ class MainApplication(tk.Frame):
         stat_associations = pd.read_csv(r"data/skills.csv")
         assert(len(stat_associations) > 10)
 
+        print(player_defined_fields)
         for skill_name in character_sheet_data['Skills'].keys():
 
             #print(skill_name)
@@ -308,11 +310,12 @@ class MainApplication(tk.Frame):
             if stat_group == "UNK": 
                 for field in player_defined_fields:
                     if test_fields[field] == skill_name:
-                        canon_skill_name = field[4:-1]
+                        canon_skill_name = field[4:-1] if field.startswith("Txt") else field[:-1]
+                        print(f"Canon: {canon_skill_name}")
                         stat_group = self.determine_stat_group(canon_skill_name, stat_associations)
 
             character_sheet_data['Skills'][skill_name]["STAT"] = stat_group
-                
+        
         return dict(character_sheet_data)
     
 
