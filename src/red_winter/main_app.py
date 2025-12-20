@@ -10,6 +10,7 @@ from .weapon_page import WeaponPage
 from .navigation_bar import NavigationBar
 from .modifier import Modifier
 from .drug_page import DrugPage
+from .injury_page import InjuryPage
 
 maps = { "DLV" : "Drive Land Vehicle",
              "PAV" : "Pilot Air Vehicle",
@@ -44,6 +45,7 @@ class MainApplication(tk.Frame):
         self.pages["Skills"] = SkillPage(self)
         self.pages["Weapons"] = WeaponPage(self)
         self.pages["Drugs"] = DrugPage(self)
+        self.pages["Injuries"] = InjuryPage(self)
 
         self.navigation = NavigationBar(self)
         self.clipboard_echo = tk.Label(self, text='')
@@ -291,9 +293,11 @@ class MainApplication(tk.Frame):
         :param affect: The skill/action we are checking
         :param modifier: Collection of Modifiers currently applied
         """
-
         stat_name = self.character_sheet["Skills"][skill_name]["STAT"]
-        modifier = self.pages["Drugs"].get_active_effects()
+        drug_modifier = self.pages["Drugs"].get_active_effects()
+        injury_modifier = self.pages["Injuries"].get_active_effects()
+
+        modifier = drug_modifier + injury_modifier
 
         magnitude_list: list[str] = []
         reason_list: list[str] = []

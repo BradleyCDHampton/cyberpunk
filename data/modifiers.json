@@ -6,7 +6,7 @@
         }
     },
     "Mortally Wounded" : {
-        "type" : "Critical Injury",
+        "type" : "HP",
         "affects" : {
             "All Actions" : -4,
             "MOVE" : -6
