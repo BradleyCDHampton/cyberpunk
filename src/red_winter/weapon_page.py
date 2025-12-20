@@ -17,7 +17,7 @@ class WeaponPage(tk.Frame):
 
         i: int = 1
         for weapon in weapons.values():
-            print(weapon)
+            #print(weapon)
             if weapon["Name"] is None or weapon["Name"] == "":
                 continue
 

@@ -28,7 +28,7 @@ class Modifier:
 
         self.ignore_list = ignore_list
         self.data: defaultdict[str, list[tuple[str, int]]] = defaultdict(list)
-        
+
         if modifier_list is not None:
             for affects, magnitude in modifier_list:
                 self.data[affects].append((modifier_name, magnitude))

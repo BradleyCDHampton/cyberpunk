@@ -9,6 +9,7 @@ from .skill_page import SkillPage
 from .weapon_page import WeaponPage
 from .navigation_bar import NavigationBar
 from .modifier import Modifier
+from .drug_page import DrugPage
 
 maps = { "DLV" : "Drive Land Vehicle",
              "PAV" : "Pilot Air Vehicle",
@@ -42,6 +43,7 @@ class MainApplication(tk.Frame):
 
         self.pages["Skills"] = SkillPage(self)
         self.pages["Weapons"] = WeaponPage(self)
+        self.pages["Drugs"] = DrugPage(self)
 
         self.navigation = NavigationBar(self)
         self.clipboard_echo = tk.Label(self, text='')
@@ -282,15 +284,36 @@ class MainApplication(tk.Frame):
         return dict(character_sheet_data)
     
     #TODO rewrite all these
-    def basic_skill_check(self, skill_name, modifier: Modifier=Modifier()) -> None:
+    def basic_skill_check(self, skill_name) -> None:
         """
         Copies the Discord command for a particular skill check to the clipboard
         
         :param affect: The skill/action we are checking
         :param modifier: Collection of Modifiers currently applied
         """
-        magnitudes, reasons = modifier.get_affect(skill_name)
+
+        stat_name = self.character_sheet["Skills"][skill_name]["STAT"]
+        modifier = self.pages["Drugs"].get_active_effects()
+
+        magnitude_list: list[str] = []
+        reason_list: list[str] = []
+
+        relevant = [skill_name, stat_name, "All Actions"]
+
+        for affect in relevant:
+            curr_mag, curr_reason = modifier.get_affect(affect)
+            magnitude_list.append(curr_mag)
+            reason_list.append(curr_reason)
+
+        magnitudes: str = "".join(magnitude_list)
+
+        reason_list = [r for r in reason_list if r != ""]
+        reasons: str = ",".join(reason_list)        
+        
         base = self.character_sheet["Skills"][skill_name]["BASE"]
+
+        print(magnitudes)
+        print(reasons)
 
         if len(reasons) > 0:
             reasons = ' (' + reasons + ')'
@@ -357,6 +380,7 @@ class MainApplication(tk.Frame):
         if "(EQ)" in weapon: # Excellent Quality -> +1
             modifiers.append("+1")
 
+        
         modifiers = "".join(modifiers)
 
         discord_command = f"!r 1d10+{base}{modifiers} Attack w/ {weapon}"
