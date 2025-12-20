@@ -14,6 +14,20 @@ if __name__ == "__main__":
     root.title("Red WINTER App")
     root.mainloop()
 
+"""
+Flaws:
+    * Certain Drugs/effects cannot lower MOVE to 0 or a STAT above 8
+
+    *   potential solution: add "rules" to JSON to communicate this info e.g. "if MOVE above 8, ignore'
+    *   ...sequencing of that
+
+    * Things like Wheelhaus apply additional debuffs depending on the situation
+        potential solution... have more buttons.
+
+TODO:
+    * make weapons follow the same modifier system
+
+"""
 
 # Critical Injuries
 # Drugs no Addiction

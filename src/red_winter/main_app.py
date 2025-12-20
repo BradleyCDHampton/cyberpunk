@@ -1,5 +1,6 @@
 from PyPDF2 import PdfReader
 import tkinter as tk
+from tkinter import filedialog
 from collections import defaultdict
 import re
 import pandas as pd
@@ -11,6 +12,9 @@ from .navigation_bar import NavigationBar
 from .modifier import Modifier
 from .drug_page import DrugPage
 from .injury_page import InjuryPage
+from .file_manager import FilePage
+
+
 
 maps = { "DLV" : "Drive Land Vehicle",
              "PAV" : "Pilot Air Vehicle",
@@ -37,11 +41,21 @@ class MainApplication(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
         # Initialize Character Sheet
-        self.character_sheet_link = character_sheet_link
-        self.character_sheet = self.load_character_sheet(character_sheet_link)
+
+        file_path = filedialog.askopenfilename(
+            title="Select a file",
+            filetypes=[("Pdfs", "*.pdf"), ("All Files", "*.*")]
+        )
+        if file_path:
+            self.character_sheet_link = file_path
+        else:
+            self.character_sheet_link = character_sheet_link
+
+        self.character_sheet = self.load_character_sheet(self.character_sheet_link)
 
         self.pages = {}
 
+        self.pages["Save/Load"] = FilePage(self) 
         self.pages["Skills"] = SkillPage(self)
         self.pages["Weapons"] = WeaponPage(self)
         self.pages["Drugs"] = DrugPage(self)
