@@ -23,6 +23,7 @@ Flaws:
 
     * Things like Wheelhaus apply additional debuffs depending on the situation
         potential solution... have more buttons.
+    * Consider: make a Check data structure that looks at all the Modifiers+base stats & enforce rules about min/maxes w/ optimal sequencing
 
 TODO:
     * make weapons follow the same modifier system

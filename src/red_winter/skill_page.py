@@ -3,6 +3,19 @@ import tkinter as tk
 from tkinter import font
 from collections import defaultdict
 
+##############################################################################################
+
+colors = {
+    "COOL" : "#50AED1",
+    "REF" : "#40B338",
+    "EMP" : "#C948E2",
+    "INT" : "#9F5BFF",
+    "DEX" : "#EA7D3A",
+    "TECH" : "#B3CE1B",
+}
+
+##############################################################################################
+
 class SkillPage(tk.Frame):
     """
         Page for the Skill Checks
@@ -16,23 +29,55 @@ class SkillPage(tk.Frame):
         skills = self.parent.character_sheet["Skills"]
         organizer: defaultdict[str, list[str]] = defaultdict(list[str])
 
+        # Three Columns of Frames each skill Frame will reside in
+        sections: list[tk.Frame] = []
+        for i in range(3):
+            sections.append(tk.Frame(self))
+            
+            sections[i].pack(side='left')
+
         for skill_name in skills.keys():
             organizer[skills[skill_name]["STAT"]].append(skill_name)
 
-        cols=4
-        i = 0
+        stat_frames: dict[str, tk.Frame] = {}
+
         for stat, skills in organizer.items():
             if len(skills) == 0: # If there are no skills under that stat
                 continue
-            tk.Label(self, text=stat).grid(row=i//cols, column=0, columnspan=cols, sticky="ew")
-            i += cols
+
+            # Figure out which of the three main columns a stat should go into.
+            stat_parent: tk.Frame
+            if stat in ["REF","TECH"]:
+                stat_parent = sections[0]
+            elif stat in ["WILL","EMP","DEX","COOL"]:
+                stat_parent = sections[1]
+            else:
+                stat_parent = sections[2]
+               
+            stat_frames[stat] = tk.Frame(stat_parent)
+            tk.Label(
+                stat_frames[stat], text=stat,
+                width=25, height=1, bg="#000000", fg="#ffffff"
+                ).grid(row=0, column=0, columnspan=2, sticky="ew",
+            )
             
             light_font = font.Font(family='Segoe UI', size=9)
             # Generate buttons for each of the stat's skills
+            i:int = 2
+
+            # Set the Color for the Buttons to the Global Configuration
+            if stat in colors.keys():
+                color = colors[stat]
+            else:
+                color = "#B45617"
+
             for skill_name in skills:
                 value = self.parent.character_sheet["Skills"][skill_name]["BASE"]
-                tk.Button(self, text=skill_name + f" ({value})", font=light_font,
+                tk.Button(stat_frames[stat], text=skill_name + f" ({value})", font=light_font,
+                          width=25, height=1,
                           command=lambda s=skill_name: self.parent.basic_skill_check(s),
-                          bg='#B45617', fg="#0A0228").grid(row=i//cols, column=i%cols, sticky="ew")
+                          bg=color, fg="#0A0228").grid(row=i//2, column=i%2, sticky="ew")
                 i+=1
-            i = (i + cols - 1)//cols * cols 
+            stat_frames[stat].pack()
+
+        
