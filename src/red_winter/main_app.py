@@ -14,8 +14,7 @@ from .drug_page import DrugPage
 from .injury_page import InjuryPage
 from .file_manager import FilePage
 
-
-
+#TODO move maps to its own utility/json/whatever
 maps = { "DLV" : "Drive Land Vehicle",
              "PAV" : "Pilot Air Vehicle",
              "PSV" : "Pilot Sea Vehicle",
@@ -60,13 +59,12 @@ class MainApplication(tk.Frame):
         tk.Button(self.navigation, text="Load", command=self.load_new).grid(row=0, column=5)
         self.navigation.pack(side='bottom')
 
-    def load_new(self):
+    def load_new(self): #TODO needs a try/catch 
         file_path = filedialog.askopenfilename(
             title="Select a file",
-            filetypes=[("Pdfs", "*.pdf"), ("All Files", "*.*")]
+            filetypes=[("Pdfs", "*.pdf"), ]
         )
         if file_path:
-
             for page in self.pages.values():
                 page.pack_forget()
             self.navigation.pack_forget()
@@ -83,8 +81,6 @@ class MainApplication(tk.Frame):
             self.pages["Skills"].pack()
             self.navigation.pack(side='bottom')
             tk.Button(self.navigation, text="Load", command=self.load_new).grid(row=0, column=5)
-
-
 
     def update_clipboard(self, discord_command: str) -> None:
         """
@@ -357,7 +353,7 @@ class MainApplication(tk.Frame):
         self.update_clipboard(discord_command)
 
 
-    #TODO rewrite this; not using new structure
+    #TODO rewrite this; not using new structure... have this handled by Weapon?
     def damage_roll(self, roll:str, weapon:str, modifiers=None):
 
         if modifiers == None:

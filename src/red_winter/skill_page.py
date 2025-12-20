@@ -59,7 +59,6 @@ class SkillPage(tk.Frame):
                 width=25, height=1, bg="#000000", fg="#ffffff"
                 ).grid(row=0, column=0, columnspan=2, sticky="ew",
             )
-            
 
             light_font = font.Font(family='Segoe UI', size=9)
             bold_font = font.Font(family='Segoe UI', size=9, weight='bold')
