@@ -38,19 +38,31 @@ class DrugPage(tk.Frame):
 
         self.effects: dict[Modifier, tk.BooleanVar] = {}
 
+        drug_frame: tk.Frame = tk.Frame(self)
+        addiction_frame: tk.Frame = tk.Frame(self)
+        
         for drug_modifier in self.drugs:
             modifier_name = drug_modifier.modifier_list[-1]
 
-            checkbox_parity = tk.BooleanVar(self, False, modifier_name)
-            checkbox_ui  = tk.Checkbutton(self, text=modifier_name,
+            checkbox_parity = tk.BooleanVar(drug_frame, False, modifier_name)
+            checkbox_ui  = tk.Checkbutton(drug_frame, text=modifier_name,
                                           variable=checkbox_parity,
                                           width=30, anchor='w')
             self.effects[drug_modifier] = checkbox_parity
             checkbox_ui.pack()
 
-        for addiction_modifier in self.addictions:
-            pass
-            #TODO
+        for drug_modifier in self.addictions:
+            modifier_name = drug_modifier.modifier_list[-1]
+
+            checkbox_parity = tk.BooleanVar(addiction_frame, False, modifier_name)
+            checkbox_ui  = tk.Checkbutton(addiction_frame, text=modifier_name,
+                                          variable=checkbox_parity,
+                                          width=30, anchor='w')
+            self.effects[drug_modifier] = checkbox_parity
+            checkbox_ui.pack()
+
+        drug_frame.pack(side='left')
+        addiction_frame.pack(side='left')
     
     def get_active_effects(self) -> Modifier:
         """Returns: The combined Modifier of all effects that are checked"""

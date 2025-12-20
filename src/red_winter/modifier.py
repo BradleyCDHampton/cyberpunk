@@ -51,7 +51,7 @@ class Modifier:
                 result.data[affects] += magnitude
                 
             result.modifier_list += other_modifier.modifier_list
-            #result.resolve_drugs()
+            result.ignore_list += other_modifier.ignore_list
             return result
         
         return NotImplemented

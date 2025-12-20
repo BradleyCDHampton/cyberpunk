@@ -283,7 +283,7 @@ class MainApplication(tk.Frame):
                 
         return dict(character_sheet_data)
     
-    #TODO rewrite all these
+
     def basic_skill_check(self, skill_name) -> None:
         """
         Copies the Discord command for a particular skill check to the clipboard
@@ -312,15 +312,14 @@ class MainApplication(tk.Frame):
         
         base = self.character_sheet["Skills"][skill_name]["BASE"]
 
-        print(magnitudes)
-        print(reasons)
-
         if len(reasons) > 0:
             reasons = ' (' + reasons + ')'
 
         discord_command = f"!r 1d10+{base}{magnitudes} {skill_name}{reasons}"
         self.update_clipboard(discord_command)
 
+
+    #TODO rewrite this; not using new structure
     def damage_roll(self, roll:str, weapon:str, modifiers=None):
 
         if modifiers == None:
@@ -330,6 +329,7 @@ class MainApplication(tk.Frame):
         discord_command = f"!r {roll+modifiers} Damage w/ {weapon}"
         self.update_clipboard(discord_command)
 
+    #TODO rewrite this; not using new structure
     def weapon_roll(self, weapon:str, modifiers=None):
 
         weapons_list = pd.read_csv(r"data\weapons.csv")
