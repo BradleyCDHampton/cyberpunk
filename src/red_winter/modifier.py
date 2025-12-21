@@ -56,6 +56,10 @@ class Modifier:
         
         return NotImplemented
     
+    def __iadd__(self, other: object) -> Self:
+        """Adds two Modifiers together, creating a new Modifier"""
+        return self.__add__(other)
+    
 
     def __str__(self) -> str:
         """Returns: a string with each affect: magnitude on separate lines."""
