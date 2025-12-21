@@ -330,7 +330,7 @@ class MainApplication(tk.Frame):
         stat_name = self.character_sheet["Skills"][skill_name]["STAT"]
         drug_modifier = self.pages["Drugs"].get_active_effects()
         injury_modifier = self.pages["Injuries"].get_active_effects()
-        cyberware_modifier = self.pages["Cyberware"].modifier
+        cyberware_modifier = self.pages["Cyberware"].get_active_effects()
 
         modifier = drug_modifier + injury_modifier + cyberware_modifier
 

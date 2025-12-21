@@ -20,7 +20,7 @@ class CyberwarePage(tk.Frame):
         self.parent = parent
 
         self.effects = self.load_cyberware(r"data/cyberware.json")    
-        self.modifier: Modifier = Modifier()
+        self.modifiers: list[tuple[str, Modifier]] = []
 
         cyberware = self.parent.character_sheet["Cyberware"]
 
@@ -33,7 +33,7 @@ class CyberwarePage(tk.Frame):
             for slot in contents.values():
                 if 'Name' not in slot.keys() or slot['Name'] is None or slot['Name'] == '':
                     continue
-                self.modifier += self.cyberware_modifier(slot['Name'])
+                self.modifiers.append((slot['Name'], self.cyberware_modifier(slot['Name'])))
                 has_installations = True
                 y = tk.Label(cyberware_frame, text=slot['Name'], width=25, bg="#91f6e3")
                 y.pack(side='top')
@@ -72,6 +72,32 @@ class CyberwarePage(tk.Frame):
             return Modifier(cyberware_name, effect_list, ignore_list)
         
         return Modifier()
+    
+    def get_active_effects(self) -> Modifier:
+        modifier: Modifier = Modifier()
+
+        special_cyberware = ['Light Tattoo', 'Techhair', 'Chemskin'] # Some others might apply later
+        fashionware: list[str] = []
+
+        for (name, current_modifier) in self.modifiers:
+            if name in special_cyberware:
+                fashionware.append(name)
+            else:
+                modifier += current_modifier
+
+        # Handle Techskin/Chemhair
+        if 'Chemskin' in fashionware and 'Techhair' in fashionware:
+            modifier += Modifier("Chemskin & Techhair", [("Personal Grooming", 2)])
+
+        wardrobe_style_bonus: int = 0
+        for name in fashionware:
+            if name in ['Light Tattoo']:
+                wardrobe_style_bonus += 1
+
+        if wardrobe_style_bonus >= 3:
+            modifier += Modifier("Wardrobe/Style Bonus", [("Wardrobe & Style", 2)])
+
+        return modifier
 
     def load_cyberware(self, cyberware_json_path) -> dict:
 
