@@ -6,12 +6,13 @@ import re
 import pandas as pd
 import clipboard
 
-from .skill_page import SkillPage
-from .weapon_page import WeaponPage
+from .pages.skill_page import SkillPage
+from .pages.weapon_page import WeaponPage
 from .navigation_bar import NavigationBar
 from .modifier import Modifier
-from .drug_page import DrugPage
-from .injury_page import InjuryPage
+from .pages.drug_page import DrugPage
+from .pages.injury_page import InjuryPage
+from .pages.cyberware_page import CyberwarePage
 from .file_manager import FilePage
 
 #TODO move maps to its own utility/json/whatever
@@ -50,6 +51,7 @@ class MainApplication(tk.Frame):
         self.pages["Weapons"] = WeaponPage(self)
         self.pages["Drugs"] = DrugPage(self)
         self.pages["Injuries"] = InjuryPage(self)
+        self.pages["Cyberware"] = CyberwarePage(self)
 
         self.navigation = NavigationBar(self)
         self.clipboard_echo = tk.Label(self, text='')

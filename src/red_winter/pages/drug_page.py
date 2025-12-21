@@ -1,6 +1,6 @@
 import tkinter as tk
 import json
-from .modifier import Modifier
+from ..modifier import Modifier
 
 from collections import defaultdict
 
