@@ -15,6 +15,9 @@ if __name__ == "__main__":
     root.mainloop()
 
 """
+
+* cyberware... Light Tattoo/Waredrobe/Style bonuses... handle separately as no elegant solution works
+
 Flaws:
     * Certain Drugs/effects cannot lower MOVE to 0 or a STAT above 8
 

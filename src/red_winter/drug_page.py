@@ -4,6 +4,7 @@ from .modifier import Modifier
 
 from collections import defaultdict
 
+
 class DrugPage(tk.Frame):
     """
     A Page that allows you to assign/config all things related
@@ -48,7 +49,7 @@ class DrugPage(tk.Frame):
         self.effects: dict[Modifier, tk.BooleanVar] = {}
 
         i: int = 0
-        for drug_name, effects in drug_modifiers.items():
+        for drug_name, effects in sorted(drug_modifiers.items()):
             drug_frame = tk.LabelFrame(self, text=drug_name,
                                        bg="#000000", fg='#ffffff',
                                        relief='solid', borderwidth='1px')
@@ -63,7 +64,7 @@ class DrugPage(tk.Frame):
                 self.effects[effect_modifier] = checkbox_parity
                 checkbox_ui.pack(side='left')
 
-            drug_frame.grid(row=i//2, column=i%2)
+            drug_frame.grid(row=i%9, column=i//9)
             i += 1
 
     

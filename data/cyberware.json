@@ -1,0 +1,829 @@
+{
+    "Biomonitor": {
+        "type": "Fashionware",
+        "cost": 100,
+        "hl": 0,
+        "slots": -1
+    },
+    "Chemskin": {
+        "type": "Fashionware",
+        "affects": {
+            "Personal Grooming": 2
+        },
+        "cost": 100,
+        "hl": 0,
+        "slots": -1
+    },
+    "EMP Threading": {
+        "type": "Fashionware",
+        "cost": 10,
+        "hl": 0,
+        "slots": -1
+    },
+    "Light Tattoo": {
+        "type": "Fashionware",
+        "affects": {
+            "Wardrobe & Style": 2
+        },
+        "cost": 100,
+        "hl": 0,
+        "slots": -1
+    },
+    "Shift Tacts": {
+        "type": "Fashionware",
+        "cost": 100,
+        "hl": 0,
+        "slots": -1
+    },
+    "Skinwatch": {
+        "type": "Fashionware",
+        "cost": 100,
+        "hl": 0,
+        "slots": -1
+    },
+    "Techhair": {
+        "type": "Fashionware",
+        "affects": {
+            "Personal Grooming": 2
+        },
+        "cost": 100,
+        "hl": 0,
+        "slots": -1
+    },
+    "Neural Link": {
+        "type": "Neuralware",
+        "cost": 500,
+        "hl": 7,
+        "slots": 5
+    },
+    "Braindance Recorder": {
+        "type": "Neuralware",
+        "requires": [
+            "Neural Link"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -1
+    },
+    "Chipware Socket": {
+        "type": "Neuralware",
+        "requires": [
+            "Neural Link"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -1
+    },
+    "Interface Plugs": {
+        "type": "Neuralware",
+        "requires": [
+            "Neural Link"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -1
+    },
+    "Kerenzikov": {
+        "type": "Neuralware",
+        "affects": {
+            "Initiative": 2
+        },
+        "requires": [
+            "Neural Link"
+        ],
+        "cost": 500,
+        "hl": 14,
+        "slots": -1
+    },
+    "Sandevistan": {
+        "type": "Neuralware",
+        "affects": {
+            "Initiative": 3
+        },
+        "requires": [
+            "Neural Link"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -1
+    },
+    "Chemical Analyzer": {
+        "type": "Chipware",
+        "requires": [
+            "Chipware Socket"
+        ],
+        "cost": 500,
+        "hl": 3,
+        "slots": 0
+    },
+    "Memory Chip": {
+        "type": "Chipware",
+        "requires": [
+            "Chipware Socket"
+        ],
+        "cost": 10,
+        "hl": 0,
+        "slots": 0
+    },
+    "Olfactory Boost": {
+        "type": "Chipware",
+        "requires": [
+            "Chipware Socket"
+        ],
+        "cost": 100,
+        "hl": 7,
+        "slots": 0
+    },
+    "Pain Editor": {
+        "type": "Chipware",
+        "ignores": [
+            "Seriously Wounded"
+        ],
+        "requires": [
+            "Chipware Socket"
+        ],
+        "cost": 1000,
+        "hl": 14,
+        "slots": 0
+    },
+    "Skill Chip": {
+        "type": "Chipware",
+        "requires": [
+            "Chipware Socket"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": 0
+    },
+    "Tactile Boost": {
+        "type": "Chipware",
+        "requires": [
+            "Chipware Socket"
+        ],
+        "cost": 100,
+        "hl": 7,
+        "slots": 0
+    },
+    "Cybereye": {
+        "type": "Cyberoptics",
+        "cost": 100,
+        "hl": 7,
+        "slots": 3
+    },
+    "Anti-Dazzle": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye",
+            "Cybereye",
+            "Anti-Dazzle",
+            "Anti-Dazzle"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Chyron": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Color Shift": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Dartgun": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye"
+        ],
+        "cost": 500,
+        "hl": 2,
+        "slots": -3
+    },
+    "Image Enhance": {
+        "type": "Cyberoptics",
+        "affects": {
+            "Perception": 2,
+            "Lip Reading": 2,
+            "Conceal/Reveal Object": 2
+        },
+        "requires": [
+            "Cybereye",
+            "Cybereye"
+        ],
+        "cost": 500,
+        "hl": 3,
+        "slots": -1
+    },
+    "Low Light / Infrared / UV": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye",
+            "Cybereye",
+            "Low Light / Infrared / UV",
+            "Low Light / Infrared / UV"
+        ],
+        "cost": 500,
+        "hl": 3,
+        "slots": -2
+    },
+    "MicroOptics": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "MicroVideo": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye"
+        ],
+        "cost": 500,
+        "hl": 2,
+        "slots": -2
+    },
+    "Radiation Detector": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye"
+        ],
+        "cost": 1000,
+        "hl": 3,
+        "slots": -1
+    },
+    "Targetting Scope": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye"
+        ],
+        "affects": {
+            "Aimed Shot": 1
+        },
+        "cost": 500,
+        "hl": 3,
+        "slots": -1
+    },
+    "TeleOptics": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye"
+        ],
+        "affects": {
+            "Ranged": 1
+        },
+        "cost": 500,
+        "hl": 3,
+        "slots": -1
+    },
+    "Virtuality": {
+        "type": "Cyberoptics",
+        "requires": [
+            "Cybereye",
+            "Cybereye",
+            "Virtuality",
+            "Virtuality"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Cyberaudio Suite": {
+        "type": "Cyberaudio",
+        "cost": 500,
+        "hl": 7,
+        "slots": 3
+    },
+    "Amplified Hearing": {
+        "type": "Cyberaudio",
+        "affects": {
+            "Perception": 2
+        },
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 100,
+        "hl": 3,
+        "slots": -1
+    },
+    "Audio Recorder": {
+        "type": "Cyberaudio",
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Bug Detector": {
+        "type": "Cyberaudio",
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Homing Tracer": {
+        "type": "Cyberaudio",
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Internal Agent": {
+        "type": "Cyberaudio",
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 100,
+        "hl": 3,
+        "slots": -1
+    },
+    "Level Damper": {
+        "type": "Cyberaudio",
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Radio Communicator": {
+        "type": "Cyberaudio",
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Radio Scanner / Music Player": {
+        "type": "Cyberaudio",
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 50,
+        "hl": 2,
+        "slots": -1
+    },
+    "Radar Detector": {
+        "type": "Cyberaudio",
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 500,
+        "hl": 2,
+        "slots": -1
+    },
+    "Scrambler / Descrambler": {
+        "type": "Cyberaudio",
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Voice Stress Analyzer": {
+        "type": "Cyberaudio",
+        "affects": {
+            "Human Perception": 2,
+            "Interrogation": 2
+        },
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 100,
+        "hl": 3,
+        "slots": -1
+    },
+    "AudioVox": {
+        "type": "Internal",
+        "affects": {
+            "Acting": 2,
+            "Play Instrument": 2
+        },
+        "cost": 500,
+        "hl": 3,
+        "slots": -1
+    },
+    "Contraceptive Implant": {
+        "type": "Internal",
+        "cost": 10,
+        "hl": 0,
+        "slots": -1
+    },
+    "Enhanced Antibodies": {
+        "type": "Internal",
+        "cost": 500,
+        "hl": 2,
+        "slots": -1
+    },
+    "Cybersnake": {
+        "type": "Internal",
+        "cost": 1000,
+        "hl": 14,
+        "slots": -1
+    },
+    "Gills": {
+        "type": "Internal",
+        "cost": 1000,
+        "hl": 7,
+        "slots": -1
+    },
+    "Grafted Muscle and Bone Lace": {
+        "type": "Internal",
+        "affects": {
+            "BODY": 2
+        },
+        "cost": 1000,
+        "hl": 14,
+        "slots": -1
+    },
+    "Independent Air Supply": {
+        "type": "Internal",
+        "cost": 1000,
+        "hl": 2,
+        "slots": -1
+    },
+    "Midnight Lady Sexual Implant": {
+        "type": "Internal",
+        "cost": 100,
+        "hl": 7,
+        "slots": -1
+    },
+    "Mr. Studd Sexual Implant": {
+        "type": "Internal",
+        "cost": 100,
+        "hl": 7,
+        "slots": -1
+    },
+    "Nasal Filters": {
+        "type": "Internal",
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Radar/Sonar Implant": {
+        "type": "Internal",
+        "cost": 1000,
+        "hl": 7,
+        "slots": -1
+    },
+    "Toxin Binders": {
+        "type": "Internal",
+        "affects": {
+            "Resist Torture/Drugs": 2
+        },
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Vampyres": {
+        "type": "Internal",
+        "cost": 500,
+        "hl": 14,
+        "slots": -1
+    },
+    "Hidden Holster": {
+        "type": "External",
+        "cost": 500,
+        "hl": 7,
+        "slots": -1
+    },
+    "Skin Weave": {
+        "type": "External",
+        "cost": 500,
+        "hl": 7,
+        "slots": -1
+    },
+    "Subdermal Armor": {
+        "type": "External",
+        "cost": 1000,
+        "hl": 14,
+        "slots": -1
+    },
+    "Subdermal Pocket": {
+        "type": "External",
+        "cost": 100,
+        "hl": 3,
+        "slots": -1
+    },
+    "Cyberarm": {
+        "type": "Cyberarm",
+        "cost": 500,
+        "hl": 7,
+        "slots": 4
+    },
+    "Standard Hand": {
+        "type": "Cyberarm",
+        "cost": 100,
+        "hl": 2,
+        "slots": 0
+    },
+    "Big Knucks": {
+        "type": "Cyberarm",
+        "cost": 100,
+        "hl": 3,
+        "slots": -1
+    },
+    "Cyberdeck": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm",
+            "Interface Plugs",
+            "Neural Link"
+        ],
+        "cost": 500,
+        "hl": 3,
+        "slots": -3
+    },
+    "Grapple Hand": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm"
+        ],
+        "cost": 100,
+        "hl": 3,
+        "slots": -1
+    },
+    "Medscanner": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -2
+    },
+    "Popup Grenade Launcher": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -2
+    },
+    "Popup Melee Weapon": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -2
+    },
+    "Popup Shield": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -3
+    },
+    "Popup Ranged Weapon": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -2
+    },
+    "Quick Change Mount": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm"
+        ],
+        "cost": 100,
+        "hl": 7,
+        "slots": -1
+    },
+    "Rippers": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm"
+        ],
+        "cost": 500,
+        "hl": 3,
+        "slots": -1
+    },
+    "Scratchers": {
+        "type": "Cyberarm",
+        "cost": 100,
+        "hl": 2,
+        "slots": -1
+    },
+    "Shoulder Cam": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -2
+    },
+    "Slice 'N Dice": {
+        "type": "Cyberarm",
+        "cost": 500,
+        "hl": 3,
+        "slots": -1
+    },
+    "Subdermal Grip": {
+        "type": "Cyberarm",
+        "requires": [
+            "Neural Link"
+        ],
+        "cost": 100,
+        "hl": 3,
+        "slots": -1
+    },
+    "Techscanner": {
+        "type": "Cyberarm",
+        "requires": [
+            "Cyberarm"
+        ],
+        "cost": 500,
+        "hl": 7,
+        "slots": -2
+    },
+    "Tool Hand": {
+        "type": "Cyberarm",
+        "cost": 100,
+        "hl": 3,
+        "slots": -1
+    },
+    "Wolvers": {
+        "type": "Cyberarm",
+        "cost": 500,
+        "hl": 7,
+        "slots": -1
+    },
+    "Cyberleg": {
+        "type": "Cyberleg",
+        "cost": 100,
+        "hl": 3,
+        "slots": 3
+    },
+    "Standard Foot": {
+        "type": "Cyberleg",
+        "cost": 100,
+        "hl": 2,
+        "slots": 0
+    },
+    "Grip Foot": {
+        "type": "Cyberleg",
+        "requires": [
+            "Cyberleg",
+            "Cyberleg",
+            "Grip Foot",
+            "Grip Foot"
+        ],
+        "cost": 500,
+        "hl": 3,
+        "slots": -1
+    },
+    "Jump Booster": {
+        "type": "Cyberleg",
+        "requires": [
+            "Cyberleg",
+            "Cyberleg",
+            "Jump Booster",
+            "Jump Booster"
+        ],
+        "cost": 500,
+        "hl": 3,
+        "slots": -2
+    },
+    "Skate Foot": {
+        "type": "Cyberleg",
+        "requires": [
+            "Cyberleg",
+            "Cyberleg",
+            "Skate Foot",
+            "Skate Foot"
+        ],
+        "cost": 500,
+        "hl": 3,
+        "slots": -1
+    },
+    "Talon Foot": {
+        "type": "Cyberleg",
+        "cost": 500,
+        "hl": 3,
+        "slots": -1
+    },
+    "Web Foot": {
+        "type": "Cyberleg",
+        "requires": [
+            "Cyberleg",
+            "Cyberleg",
+            "Web Foot",
+            "Web Foot"
+        ],
+        "cost": 500,
+        "hl": 3,
+        "slots": -1
+    },
+    "Hardened Shielding": {
+        "type": "Cyberlimb",
+        "requires": [
+            "Cyberlimb"
+        ],
+        "cost": 1000,
+        "hl": 3,
+        "slots": -1
+    },
+    "Plastic Covering": {
+        "type": "Cyberlimb",
+        "requires": [
+            "Cyberlimb"
+        ],
+        "cost": 100,
+        "hl": 0,
+        "slots": 0
+    },
+    "Realskinn Covering": {
+        "type": "Cyberlimb",
+        "requires": [
+            "Cyberlimb"
+        ],
+        "cost": 500,
+        "hl": 0,
+        "slots": 0
+    },
+    "Superchrome Covering": {
+        "type": "Cyberlimb",
+        "requires": [
+            "Cyberlimb"
+        ],
+        "affects": {
+            "Wardrobe and Style": 2
+        },
+        "cost": 1000,
+        "hl": 0,
+        "slots": 0
+    },
+    "Artificial Shoulder Mount": {
+        "type": "Borgware",
+        "cost": 1000,
+        "hl": 14,
+        "slots": -1
+    },
+    "Implanted Linear Frame (Sigma)": {
+        "type": "Borgware",
+        "requires": [
+            "Grafted Muscle and Bone Lace"
+        ],
+        "affects": {
+            "BODY": 12
+        },
+        "cost": 1000,
+        "hl": 14,
+        "slots": -1
+    },
+    "Implanted Linear Frame (Beta)": {
+        "type": "Borgware",
+        "requires": [
+            "Grafted Muscle and Bone Lace",
+            "Grafted Muscle and Bone Lace"
+        ],
+        "affects": {
+            "BODY": 14
+        },
+        "cost": 5000,
+        "hl": 14,
+        "slots": -1
+    },
+    "MultiOptic Mount": {
+        "type": "Borgware",
+        "cost": 1000,
+        "hl": 14,
+        "slots": 0
+    },
+    "Sensor Array": {
+        "type": "Borgware",
+        "requires": [
+            "Cyberaudio Suite"
+        ],
+        "cost": 1000,
+        "hl": 14,
+        "slots": 5
+    }
+}
