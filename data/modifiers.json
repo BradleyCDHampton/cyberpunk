@@ -312,6 +312,17 @@
         }
     },
     "Double or Nothing" : {
+        "type" : "Drug",
+        "affects" : {
+            "Gambling": 1,
+            "Concentration": 1,
+            "Streetwise" : 1
+        }
+    },
+    "Addiction: Double or Nothing" : {
+        "type" : "Addiction"
+    },
+    "Blackout" : {
         "type" : "Drug"
     },
     "Addiction: Blackout" : {
@@ -322,9 +333,13 @@
     },
     "Hound Dog" : {
         "type" : "Drug",
-         "affects" : {
+        "ignores" : ["Addiction: Hound Dog"],
+        "affects" : {
             "Tracking" : 5
         }
+    },
+    "Addiction: Hound Dog" : {
+        "type" : "Addiction"
     },
     "Limitless" : {
         "type" : "Drug",

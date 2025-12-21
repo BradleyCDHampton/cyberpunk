@@ -57,8 +57,6 @@ class WeaponPage(tk.Frame):
     
     def damage_roll(self, roll:str, weapon:str, modifiers=None):
         
-
-
         #TODO Weapons might have an intrinsic +1
         #TODO Combat awareness
 

@@ -2,6 +2,8 @@ import tkinter as tk
 import json
 from .modifier import Modifier
 
+from collections import defaultdict
+
 class DrugPage(tk.Frame):
     """
     A Page that allows you to assign/config all things related
@@ -18,58 +20,52 @@ class DrugPage(tk.Frame):
 
         #[("Archery", 1), ("Brawling",-2)]
 
-        self.drugs = []
-        self.addictions = []
+        drug_modifiers: defaultdict[str, dict[str, Modifier]] = defaultdict(dict)
 
         with open(r"data/modifiers.json", 'r') as modifier_file:
             data: dict = json.load(modifier_file)
 
             for modifier_name, contents in data.items():
 
-                modifier_list: list[tuple[str,int]] = []
+                effect_list: list[tuple[str,int]] = []
                 ignore_list: list[str] = []
 
                 if 'affects' in contents.keys():
                     for affect, magnitude in contents['affects'].items():
-                        modifier_list.append((affect, magnitude))
+                        effect_list.append((affect, magnitude))
                 if 'ignores' in contents.keys():
                     for ignored in contents['ignores']:
                         ignore_list.append(ignored)
 
-                modifier = Modifier(modifier_name, modifier_list, ignore_list)
-
+                modifier = Modifier(modifier_name, effect_list, ignore_list)
+    
                 if contents['type'] == 'Drug':
-                    self.drugs.append(modifier)
+                    drug_modifiers[modifier_name]['Drug'] = modifier
                 elif contents['type'] == 'Addiction':
-                    self.addictions.append(modifier)
+                    drug_modifiers[modifier_name[11:]]['Addiction'] = modifier
+
 
         self.effects: dict[Modifier, tk.BooleanVar] = {}
 
-        drug_frame: tk.Frame = tk.Frame(self)
-        addiction_frame: tk.Frame = tk.Frame(self)
-        
-        for drug_modifier in self.drugs:
-            modifier_name = drug_modifier.modifier_list[-1]
+        i: int = 0
+        for drug_name, effects in drug_modifiers.items():
+            drug_frame = tk.LabelFrame(self, text=drug_name,
+                                       bg="#000000", fg='#ffffff',
+                                       relief='solid', borderwidth='1px')
 
-            checkbox_parity = tk.BooleanVar(drug_frame, False, modifier_name)
-            checkbox_ui  = tk.Checkbutton(drug_frame, text=modifier_name,
-                                          variable=checkbox_parity,
-                                          width=30, anchor='w')
-            self.effects[drug_modifier] = checkbox_parity
-            checkbox_ui.pack()
+            for effect_name, effect_modifier in effects.items():
+                
+                checkbox_parity = tk.BooleanVar(drug_frame, False, drug_name+effect_name)
+                checkbox_ui  = tk.Checkbutton(drug_frame, text=effect_name,
+                                            variable=checkbox_parity,
+                                            bg="#DA8686",
+                                            width=15, anchor='w')
+                self.effects[effect_modifier] = checkbox_parity
+                checkbox_ui.pack(side='left')
 
-        for drug_modifier in self.addictions:
-            modifier_name = drug_modifier.modifier_list[-1]
+            drug_frame.grid(row=i//2, column=i%2)
+            i += 1
 
-            checkbox_parity = tk.BooleanVar(addiction_frame, False, modifier_name)
-            checkbox_ui  = tk.Checkbutton(addiction_frame, text=modifier_name,
-                                          variable=checkbox_parity,
-                                          width=30, anchor='w')
-            self.effects[drug_modifier] = checkbox_parity
-            checkbox_ui.pack()
-
-        drug_frame.pack(side='left')
-        addiction_frame.pack(side='left')
     
     def get_active_effects(self) -> Modifier:
         """Returns: The combined Modifier of all effects that are checked"""
