@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
 """
 
-* cyberware... Light Tattoo/Waredrobe/Style bonuses... handle separately as no elegant solution works
+
 
 Flaws:
     * Certain Drugs/effects cannot lower MOVE to 0 or a STAT above 8
@@ -30,6 +30,7 @@ Flaws:
 
 TODO:
     * make weapons follow the same modifier system
+    * do a check for weapons that can do aimed shots/autofire/etc.
 
 """
 

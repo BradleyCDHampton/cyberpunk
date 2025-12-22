@@ -46,13 +46,21 @@ class WeaponPage(tk.Frame):
             i += 1
     
 
-    def create_weapon_entry(self, weapon: dict, color:int=0):
-        print(weapon)
-
+    def create_weapon_entry(self, weapon: dict, color:int=0) -> None:
+        """
+        Generates a tkinter Frame containing UI to roll for accuracy/damage
+        for a weapon, providing a button for each firing mode #TODO
+        
+        :param weapon: The weapon, and all its data
+        :param color: Indicates the color to render the frame
+        """
         if not (weapon["Name"] is None or weapon["Name"] == ""):
             
-            # Conditionals
+            # Alternative Firing Modes
             aimed_shot_available: bool = True # TODO, make logic to check for this
+            autofire_available: bool = False
+            suppressive_fire_available: bool = False
+            shotgun_shell_available: bool = False
 
             weapon_frame = tk.LabelFrame(self, text=weapon['Name'], width=40, bg='#000000', fg='#ffffff', relief='solid')
 
@@ -115,7 +123,14 @@ class WeaponPage(tk.Frame):
         return result
 
     def get_damage_modifier(self) -> Modifier:
+        """
+        Generates a Modifier for how much bonus damage that will happen on
+        an attack's successful hit
 
+        Returns:
+            The Modifier that affects the damage that will be rolled
+            (probably just Spot Weakness)
+        """
         result = Modifier()
         try:
             value = self.modifier_data["Spot Weakness"].get()
@@ -128,9 +143,16 @@ class WeaponPage(tk.Frame):
         return result
         
     def create_modifier_fields(self, modifier_fields: list[str]) -> dict[str, tk.Entry]:
-        
-        result: dict = {}
+        """
+        Creates the set of fields where a user can input their modifiers that cannot be determined 
+        at initialization (fluctuates during play)
 
+        :param modifier_fields: The names of the fields, and also what the text label will be
+        
+        Returns:
+            A dictionary of the names of each field, mapped to its entry box.
+        """
+        result: dict = {}
         for modifier_name in modifier_fields:
 
             modifier_frame = tk.Frame(self, width=40)
