@@ -69,6 +69,11 @@ class WeaponPage(tk.Frame):
         modifiers = "".join(modifiers)
 
         discord_command = f"!r {roll+modifiers}+1 Damage w/ {weapon} (Combat Awareness)"
+
+        #TODO Replace this Jury Rigging w/ proper management of Combat Awareness
+        if self.parent.character_sheet["Handle"] != "Crux":
+            discord_command = f"!r {roll+modifiers} Damage w/ {weapon}"
+
         self.parent.update_clipboard(discord_command)
 
 
