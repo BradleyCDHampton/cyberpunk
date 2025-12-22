@@ -72,6 +72,7 @@ class SkillPage(tk.Frame):
                 color = "#B45617"
 
             for skill_name in skills:
+        
                 value = self.parent.character_sheet["Skills"][skill_name]["BASE"]
             
                 # Bold font if the BASE is 10 or higher

@@ -349,12 +349,16 @@ class MainApplication(tk.Frame):
         reason_list = [r for r in reason_list if r != ""]
         reasons: str = ",".join(reason_list)        
         
-        base = self.character_sheet["Skills"][skill_name]["BASE"]
+
+        level: int = int(self.character_sheet["Skills"][skill_name]["BASE"])
+        mod: str = self.character_sheet["Skills"][skill_name]["MOD"]
+        if mod is not None and mod != '':
+            level -= int(mod)
 
         if len(reasons) > 0:
             reasons = ' (' + reasons + ')'
 
-        discord_command = f"!r 1d10+{base}{magnitudes} {skill_name}{reasons}"
+        discord_command = f"!r 1d10+{level}{magnitudes} {skill_name}{reasons}"
         self.update_clipboard(discord_command)
 
 
