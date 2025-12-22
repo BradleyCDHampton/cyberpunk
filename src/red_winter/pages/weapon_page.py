@@ -3,6 +3,8 @@ import pandas as pd
 
 from ..modifier import Modifier
 
+colors = ["#A0D0E2", "#BDADE6", "#9F5BFF", "#EA7D3A", "#B3CE1B"]
+
 #MAP WEAPON TYPES TO SKILLS
 skills_for_weapons = {
     'Medium Pistol' : 'Handgun',
@@ -31,37 +33,31 @@ class WeaponPage(tk.Frame):
 
         self.parent = parent
 
-
-
-        """tk.Label(self, width=25, text=f"Weapon", anchor='w', bg='#000000', fg='#ffffff' ).grid(row=0, column=0)
-        tk.Label(self, width=5, text=f"DMG",  bg='#000000', fg='#ffffff').grid(row=0, column=1)
-        tk.Label(self, width=5, text=f"Ammo",  bg='#000000', fg='#ffffff').grid(row=0, column=2)
-        tk.Label(self, width=5, text=f"ROF",  bg='#000000', fg='#ffffff').grid(row=0, column=3)
-        tk.Label(self, width=25, text=f"Notes",  bg='#000000', fg='#ffffff', anchor='w').grid(row=0, column=4)"""
+        # Create fill-in Modifiers
+        modifier_fields: list[str] = ["Precision Strike", "Luck", "Situational", "Spot Weakness"]
+        self.modifier_data: dict[str, tk.Entry] = self.create_modifier_fields(modifier_fields)
 
         weapons = self.parent.character_sheet["Weapons"]
 
-        i: int = 1
+        # Create Entries for each Weapon
+        i: int = 0
         for weapon in weapons.values():
-            self.create_weapon_entry(weapon)
+            self.create_weapon_entry(weapon, i)
+            i += 1
     
-    def create_weapon_entry(self, weapon: dict):
+
+    def create_weapon_entry(self, weapon: dict, color:int=0):
         print(weapon)
 
         if not (weapon["Name"] is None or weapon["Name"] == ""):
             
-
+            # Conditionals
             aimed_shot_available: bool = True # TODO, make logic to check for this
 
-            # Single Shot
-
-
-
-            weapon_frame = tk.LabelFrame(self, text=weapon['Name'], width=40)
-
+            weapon_frame = tk.LabelFrame(self, text=weapon['Name'], width=40, bg='#000000', fg='#ffffff', relief='solid')
 
             # Single Shot Attack
-            attack_frame = tk.Frame(weapon_frame, width=40)
+            attack_frame = tk.Frame(weapon_frame, width=50, bg=colors[color])
 
             tk.Button(attack_frame, width=25, text="Single Shot", anchor='w',
                                             fg='#000000', bg="#47B35D",
@@ -69,53 +65,98 @@ class WeaponPage(tk.Frame):
             tk.Button(attack_frame, width=5, text=weapon["DMG"],
                                             fg='#000000', bg="#47B35D",
                                             command=lambda dmg=weapon["DMG"], weapon=weapon["Name"]: self.damage_roll(dmg, weapon)).pack(side='left')
-            tk.Label(attack_frame, width=5, text=f"ROF: {weapon["ROF"]}").pack(side='left')
-            tk.Label(attack_frame, width=5, text=weapon["Ammo"]).pack(side='left')
+            tk.Label(attack_frame, width=5, text=f"ROF: {weapon["ROF"]}", bg=colors[color]).pack(side='left')
+            tk.Label(attack_frame, width=5, text=weapon["Ammo"], bg=colors[color]).pack(side='left')
 
             attack_frame.pack()
 
             if aimed_shot_available: # Aimed Shot
-                aimed_attack_frame = tk.Frame(weapon_frame, width=40)
+                aimed_attack_frame = tk.Frame(weapon_frame, width=50, bg=colors[color])
 
                 aimed_shot_penalty = Modifier("Aimed Shot", [("Aimed Shot", -8)])
 
                 tk.Button(aimed_attack_frame, width=25, text="Aimed Shot", anchor='w',
                                                 fg='#000000', bg="#47B35D",
                                                 command=lambda weapon=weapon, other_checks=["Aimed Shot"], other_modifiers=[aimed_shot_penalty], action="Aimed Shot": self.weapon_attack_check(weapon, other_checks, other_modifiers, action)).pack(side='left')
-            
                 tk.Button(aimed_attack_frame, width=5, text=weapon["DMG"],
                                                 fg='#000000', bg="#47B35D",
                                                 command=lambda dmg=weapon["DMG"], weapon=weapon["Name"]: self.damage_roll(dmg, weapon)).pack(side='left')
-                tk.Label(aimed_attack_frame, width=5, text=f"ROF: 1").pack(side='left')
-                tk.Label(aimed_attack_frame, width=5, text=weapon["Ammo"]).pack(side='left')
+                tk.Label(aimed_attack_frame, width=5, text=f"ROF: 1", bg=colors[color]).pack(side='left')
+                tk.Label(aimed_attack_frame, width=5, text=weapon["Ammo"], bg=colors[color]).pack(side='left')
                 aimed_attack_frame.pack()
 
-
-
-
-
-
-            tk.Label(weapon_frame, width=40, text=weapon["Notes"], anchor='w').pack()
+            tk.Label(weapon_frame, width=40, text=weapon["Notes"], anchor='w', bg=colors[color]).pack(fill='x')
             weapon_frame.pack()
             
+    
+    def get_accuracy_modifier(self) -> Modifier:
+        """
+        Generates a modifier that encapsulates all of the ways an attack check can be modified.
+        
+        Returns:
+            A Modifier object that contains the data from the Precision Strike, Luck, and
+            Situational Modifier fields.
 
+            If there is an error parsing these fields (mal-formed), then an empty Modifier
+            is returned instead.
+        """
 
-    def damage_roll(self, roll:str, weapon:str, modifiers=None):
+        result: Modifier = Modifier()
+        
+        try:
+            for modifier_name in ["Precision Strike","Luck", "Situational"]:
+                value = self.modifier_data[modifier_name].get()
+                if not (value is None or value == ''):
+                    result += Modifier(modifier_name, [("All Actions", int(value))])
+        except:
+            print("Error parsing accuracy Modifier")
+            result = Modifier()
+
+        return result
+
+    def get_damage_modifier(self) -> Modifier:
+
+        result = Modifier()
+        try:
+            value = self.modifier_data["Spot Weakness"].get()
+            if not (value is None or value == ''):
+                result += Modifier("Spot Weakness", [("All Actions", int(value))])
+        except:
+            print("Error parsing accuracy Modifier")
+            result = Modifier()
+
+        return result
+        
+    def create_modifier_fields(self, modifier_fields: list[str]) -> dict[str, tk.Entry]:
+        
+        result: dict = {}
+
+        for modifier_name in modifier_fields:
+
+            modifier_frame = tk.Frame(self, width=40)
+
+            tk.Label(modifier_frame, text=modifier_name, width=20, anchor='w').pack(side='left')
+            result[modifier_name] = tk.Entry(modifier_frame, width=10)
+            result[modifier_name].pack(side='left')
+
+            modifier_frame.pack()
+
+        return result
+
+    def damage_roll(self, roll:str, weapon:str):
         
         #TODO Weapons might have an intrinsic +1
         #TODO Combat awareness
 
         #Modifier --> Whatever Skill, Ranged, All Actions, Attack 
 
-        if modifiers == None:
-            modifiers = []
-        modifiers = "".join(modifiers)
+        damage_modifier: Modifier = self.get_damage_modifier()
+        magnitudes, reasons = damage_modifier.get_affect("All Actions")
 
-        discord_command = f"!r {roll+modifiers}+1 Damage w/ {weapon} (Combat Awareness)"
+        if len(reasons) > 0:
+            reasons = ' (' + reasons + ')'
 
-        #TODO Replace this Jury Rigging w/ proper management of Combat Awareness
-        if self.parent.character_sheet["Handle"] != "Crux":
-            discord_command = f"!r {roll+modifiers} Damage w/ {weapon}"
+        discord_command = f"!r {roll}{magnitudes} Damage w/ {weapon}{reasons}"
 
         self.parent.update_clipboard(discord_command)
 
@@ -154,7 +195,7 @@ class WeaponPage(tk.Frame):
 
         if other_modifiers is None:
             other_modifiers = []
-        modifier_list = [drug_modifier, injury_modifier, cyberware_modifier] + other_modifiers
+        modifier_list = [drug_modifier, injury_modifier, cyberware_modifier, self.get_accuracy_modifier()] + other_modifiers
         for current in modifier_list:
             modifier += current
 
