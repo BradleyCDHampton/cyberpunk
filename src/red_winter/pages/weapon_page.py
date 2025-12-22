@@ -1,6 +1,8 @@
 import tkinter as tk
 import pandas as pd
 
+from ..modifier import Modifier
+
 #MAP WEAPON TYPES TO SKILLS
 skills_for_weapons = {
     'Medium Pistol' : 'Handgun',
@@ -45,7 +47,7 @@ class WeaponPage(tk.Frame):
 
             tk.Button(self, width=25, text=weapon["Name"], anchor='w',
                                             fg='#000000', bg="#47B35D",
-                                            command=lambda weapon=weapon["Name"]: self.weapon_attack_check(weapon)).grid(row=i, column=0)
+                                            command=lambda weapon=weapon: self.weapon_attack_check(weapon)).grid(row=i, column=0)
             tk.Button(self, width=5, text=weapon["DMG"],
                                             fg='#000000', bg="#47B35D",
                                             command=lambda dmg=weapon["DMG"], weapon=weapon["Name"]: self.damage_roll(dmg, weapon)).grid(row=i, column=1)
@@ -70,13 +72,13 @@ class WeaponPage(tk.Frame):
         self.parent.update_clipboard(discord_command)
 
 
-    def weapon_attack_check(self, weapon_name) -> None:
+    def weapon_attack_check(self, weapon) -> None:
         """
         Copies the Discord command for a particular weapon attack check to the clipboard
         
         :param weapon_name: The weapon we are performing an attack check with
         """
-
+        weapon_name: str = weapon["Name"]
         weapons_list = pd.read_csv(r"data\weapons.csv")
 
         for i in range(len(weapon_name)):
@@ -95,10 +97,18 @@ class WeaponPage(tk.Frame):
         # Same logic from before
 
         stat_name = self.parent.character_sheet["Skills"][skill_name]["STAT"]
-        drug_modifier = self.parent.pages["Drugs"].get_active_effects()
-        injury_modifier = self.parent.pages["Injuries"].get_active_effects()
+        drug_modifier: Modifier = self.parent.pages["Drugs"].get_active_effects()
+        injury_modifier: Modifier = self.parent.pages["Injuries"].get_active_effects()
+        cyberware_modifier: Modifier = self.parent.pages["Cyberware"].get_active_effects()
 
-        modifier = drug_modifier + injury_modifier
+        modifier: Modifier = drug_modifier + injury_modifier + cyberware_modifier
+
+
+        #TODO make this nicer, this is a jury rig for rn
+        if "EQ" in weapon['Notes']:
+            modifier += Modifier("EQ", [("All Actions", 1)])
+        if "Smartlink" in weapon['Notes']:
+            modifier += Modifier("Smartlink", [("All Actions", 1)])
 
         magnitude_list: list[str] = []
         reason_list: list[str] = []
