@@ -68,7 +68,7 @@ class WeaponPage(tk.Frame):
             modifiers = []
         modifiers = "".join(modifiers)
 
-        discord_command = f"!r {roll+modifiers} Damage w/ {weapon}"
+        discord_command = f"!r {roll+modifiers}+1 Damage w/ {weapon} (Combat Awareness)"
         self.parent.update_clipboard(discord_command)
 
 
