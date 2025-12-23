@@ -108,7 +108,6 @@ class WeaponPage(tk.Frame):
             If there is an error parsing these fields (mal-formed), then an empty Modifier
             is returned instead.
         """
-
         result: Modifier = Modifier()
         
         try:
