@@ -2,7 +2,6 @@ import tkinter as tk
 import pandas as pd
 
 from ..modifier import Modifier
-from ..rolls import damage_roll
 
 colors = ["#A0D0E2", "#BDADE6", "#9F5BFF", "#EA7D3A", "#B3CE1B"]
 
@@ -58,66 +57,46 @@ class WeaponPage(tk.Frame):
         if not (weapon["Name"] is None or weapon["Name"] == ""):
             
             # Alternative Firing Modes
-            aimed_shot_available: bool = True #TODO, make logic to check for this
-            autofire_available: bool = False #TODO
-            suppressive_fire_available: bool = False #TODO
-            shotgun_shell_available: bool = False #TODO
+            aimed_shot_available: bool = True # TODO, make logic to check for this
+            autofire_available: bool = False
+            suppressive_fire_available: bool = False
+            shotgun_shell_available: bool = False
 
             weapon_frame = tk.LabelFrame(self, text=weapon['Name'], width=40, bg='#000000', fg='#ffffff', relief='solid')
 
-            # Single Shot (always available?)
-            self.create_attack_entry(weapon_frame, "Single Shot", weapon, color)
+            # Single Shot Attack
+            attack_frame = tk.Frame(weapon_frame, width=50, bg=colors[color])
 
-            if aimed_shot_available:
+            tk.Button(attack_frame, width=25, text="Single Shot", anchor='w',
+                                            fg='#000000', bg="#47B35D",
+                                            command=lambda weapon=weapon: self.weapon_attack_check(weapon)).pack(side='left')
+            tk.Button(attack_frame, width=5, text=weapon["DMG"],
+                                            fg='#000000', bg="#47B35D",
+                                            command=lambda dmg=weapon["DMG"], weapon=weapon["Name"]: self.damage_roll(dmg, weapon)).pack(side='left')
+            tk.Label(attack_frame, width=5, text=f"ROF: {weapon["ROF"]}", bg=colors[color]).pack(side='left')
+            tk.Label(attack_frame, width=5, text=weapon["Ammo"], bg=colors[color]).pack(side='left')
+
+            attack_frame.pack()
+
+            if aimed_shot_available: # Aimed Shot
+                aimed_attack_frame = tk.Frame(weapon_frame, width=50, bg=colors[color])
+
                 aimed_shot_penalty = Modifier("Aimed Shot", [("Aimed Shot", -8)])
-                self.create_attack_entry(weapon_frame, "Aimed Shot", weapon, color, rate_of_fire=1, attack_modifiers=[aimed_shot_penalty], attack_checks=["Aimed Shot"])
-            if autofire_available:
-                pass #TODO 
-            if suppressive_fire_available:
-                pass #TODO
-            if shotgun_shell_available:
-                pass #TODO
+
+                tk.Button(aimed_attack_frame, width=25, text="Aimed Shot", anchor='w',
+                                                fg='#000000', bg="#47B35D",
+                                                command=lambda weapon=weapon, other_checks=["Aimed Shot"], other_modifiers=[aimed_shot_penalty], action="Aimed Shot": self.weapon_attack_check(weapon, other_checks, other_modifiers, action)).pack(side='left')
+                tk.Button(aimed_attack_frame, width=5, text=weapon["DMG"],
+                                                fg='#000000', bg="#47B35D",
+                                                command=lambda dmg=weapon["DMG"], weapon=weapon["Name"]: self.damage_roll(dmg, weapon)).pack(side='left')
+                tk.Label(aimed_attack_frame, width=5, text=f"ROF: 1", bg=colors[color]).pack(side='left')
+                tk.Label(aimed_attack_frame, width=5, text=weapon["Ammo"], bg=colors[color]).pack(side='left')
+                aimed_attack_frame.pack()
 
             tk.Label(weapon_frame, width=40, text=weapon["Notes"], anchor='w', bg=colors[color]).pack(fill='x')
             weapon_frame.pack()
             
-    def create_attack_entry(self, weapon_frame:tk.LabelFrame, attack_label:str, weapon: dict, color:int=0, damage=None, rate_of_fire=None, attack_modifiers=None, attack_checks=None) -> None:
-        """
-        Creates a row in a weapon_frame, providing information about a particular way to attack, and buttons
-        to press to generate/copy the commands for an attack or damage roll.
-        
-        :param weapon_frame: The frame where the attack entry will be put inside
-        :param attack_label: How the attack is described (e.g. Single Shot, Aimed Shot, Autofire)
-        :param weapon: The dictionary containing information about the weapon that is used
-        :param color: Indicates the color to render the background the labels
-        :param damage: Optional: overrides the standard damage roll to be used. If not defined, uses weapon['DMG']
-        :param rate_of_fire: override for the ROF to be used. If not defined, uses weapon['ROF']
-        :param attack_modifiers: Any additional modifiers that might apply to the attack check
-        :param attack_checks: Any additional modifier affects that might apply to the attack (e.g. Aimed Shot)
-        """
-        damage = damage or weapon['DMG']
-        damage = str(damage)
-
-        rate_of_fire = rate_of_fire or weapon['ROF']
-        rate_of_fire = str(rate_of_fire)
-        
-        attack_modifiers = attack_modifiers or []
-        attack_checks = attack_checks or []
-
-        attack_frame = tk.Frame(weapon_frame, width=50, bg=colors[color])
-
-        tk.Button(attack_frame, width=25, text=attack_label, anchor='w',
-                                        fg='#000000', bg="#47B35D",
-                                        command=lambda weapon=weapon, other_checks=attack_checks, other_modifiers=attack_modifiers, action=attack_label: self.weapon_attack_check(weapon, other_checks, other_modifiers, action)).pack(side='left')
-        tk.Button(attack_frame, width=5, text=damage,
-                                        fg='#000000', bg="#47B35D",
-                                        command=lambda dmg=damage, weapon=weapon["Name"], : damage_roll(self.parent, dmg, weapon, [self.get_damage_modifier()])).pack(side='left')
-        tk.Label(attack_frame, width=5, text=f"ROF: {rate_of_fire}", bg=colors[color]).pack(side='left')
-        tk.Label(attack_frame, width=5, text=weapon["Ammo"], bg=colors[color]).pack(side='left')
-
-        attack_frame.pack()
-
-
+    
     def get_accuracy_modifier(self) -> Modifier:
         """
         Generates a modifier that encapsulates all of the ways an attack check can be modified.
@@ -184,6 +163,23 @@ class WeaponPage(tk.Frame):
             modifier_frame.pack()
 
         return result
+
+    def damage_roll(self, roll:str, black_ice:str):
+        
+        #TODO Weapons might have an intrinsic +1
+        #TODO Combat awareness
+
+        #Modifier --> Whatever Skill, Ranged, All Actions, Attack 
+
+        damage_modifier: Modifier = self.get_damage_modifier()
+        magnitudes, reasons = damage_modifier.get_affect("All Actions")
+
+        if len(reasons) > 0:
+            reasons = ' (' + reasons + ')'
+
+        discord_command = f"!r {roll}{magnitudes} Damage w/ {black_ice}{reasons}"
+
+        self.parent.update_clipboard(discord_command)
 
 
     #TODO generalize for AIMED shots
