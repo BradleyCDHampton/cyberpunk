@@ -19,13 +19,20 @@ class CyberwarePage(tk.Frame):
 
         self.parent = parent
 
+        canvas = tk.Frame(self, height=1)
+        scrollbar = tk.Scrollbar(canvas)
+        scrollbar.pack(side='right')
+
+        all_cyberware = tk.Frame(canvas)
+        all_cyberware.pack(side='left')
+
         self.effects = self.load_cyberware(r"data/cyberware.json")    
         self.modifiers: list[tuple[str, Modifier]] = []
 
         cyberware = self.parent.character_sheet["Cyberware"]
 
         for slot_name, contents in cyberware.items():
-            cyberware_frame = tk.LabelFrame(self, text=slot_name,
+            cyberware_frame = tk.LabelFrame(all_cyberware, text=slot_name,
                                             bg="#000000", fg='#ffffff',
                                             relief='solid', borderwidth='1px')
 
@@ -39,7 +46,10 @@ class CyberwarePage(tk.Frame):
                 y.pack(side='top')
 
             if has_installations:
-                cyberware_frame.pack(side='left')
+                cyberware_frame.pack()
+
+        all_cyberware.pack(expand=True)
+        canvas.pack()
 
 
     def cyberware_modifier(self, cyberware_name) -> Modifier:
