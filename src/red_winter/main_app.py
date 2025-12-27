@@ -10,6 +10,7 @@ from .modifier import Modifier
 from .pages.drug_page import DrugPage
 from .pages.injury_page import InjuryPage
 from .pages.cyberware_page import CyberwarePage
+from .pages.combat_awareness import CombatAwarenessPage
 from .file_manager import FilePage
 
 from .character_sheet import load_character_sheet
@@ -32,13 +33,14 @@ class MainApplication(tk.Frame):
         self.pages["Drugs"] = DrugPage(self)
         self.pages["Injuries"] = InjuryPage(self)
         self.pages["Cyberware"] = CyberwarePage(self)
+        self.pages["Combat Awareness"] = CombatAwarenessPage(self)
 
         self.navigation = NavigationBar(self)
         self.clipboard_echo = tk.Label(self, text='')
 
         self.pages["Skills"].pack()
 
-        tk.Button(self.navigation, text="Load", command=self.load_new).grid(row=0, column=5)
+        tk.Button(self.navigation, text="Load", command=self.load_new).grid(row=0, column=6)
         self.navigation.pack(side='bottom')
 
     def load_new(self): #TODO needs a try/catch 
