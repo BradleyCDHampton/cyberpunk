@@ -1,6 +1,7 @@
 import tkinter as tk
 import pandas as pd
 
+from .combat_awareness import CombatAwarenessPage
 from ..modifier import Modifier
 from ..rolls import damage_roll
 
@@ -35,7 +36,7 @@ class WeaponPage(tk.Frame):
         self.parent = parent
 
         # Create fill-in Modifiers
-        modifier_fields: list[str] = ["Precision Strike", "Luck", "Situational", "Spot Weakness"]
+        modifier_fields: list[str] = ["Luck", "Situational"]
         self.modifier_data: dict[str, tk.Entry] = self.create_modifier_fields(modifier_fields)
 
         weapons = self.parent.character_sheet["Weapons"]
@@ -111,7 +112,7 @@ class WeaponPage(tk.Frame):
                                         command=lambda weapon=weapon, other_checks=attack_checks, other_modifiers=attack_modifiers, action=attack_label: self.weapon_attack_check(weapon, other_checks, other_modifiers, action)).pack(side='left')
         tk.Button(attack_frame, width=5, text=damage,
                                         fg='#000000', bg="#47B35D",
-                                        command=lambda dmg=damage, weapon=weapon["Name"], : damage_roll(self.parent, dmg, weapon, [self.get_damage_modifier()])).pack(side='left')
+                                        command=lambda dmg=damage, weapon=weapon["Name"], : damage_roll(self.parent, dmg, weapon, [self.parent.pages["Combat Awareness"].get_modifier()])).pack(side='left')
         tk.Label(attack_frame, width=5, text=f"ROF: {rate_of_fire}", bg=colors[color]).pack(side='left')
         tk.Label(attack_frame, width=5, text=weapon["Ammo"], bg=colors[color]).pack(side='left')
 
@@ -132,7 +133,7 @@ class WeaponPage(tk.Frame):
         result: Modifier = Modifier()
         
         try:
-            for modifier_name in ["Precision Strike","Luck", "Situational"]:
+            for modifier_name in ["Luck", "Situational"]:
                 value = self.modifier_data[modifier_name].get()
                 if not (value is None or value == ''):
                     result += Modifier(modifier_name, [("All Actions", int(value))])
@@ -142,15 +143,15 @@ class WeaponPage(tk.Frame):
 
         return result
 
-    def get_damage_modifier(self) -> Modifier:
-        """
+    """    def get_damage_modifier(self) -> Modifier:
+        
         Generates a Modifier for how much bonus damage that will happen on
         an attack's successful hit
 
         Returns:
             The Modifier that affects the damage that will be rolled
             (probably just Spot Weakness)
-        """
+
         result = Modifier()
         try:
             value = self.modifier_data["Spot Weakness"].get()
@@ -160,7 +161,7 @@ class WeaponPage(tk.Frame):
             print("Error parsing accuracy Modifier")
             result = Modifier()
 
-        return result
+        return result"""
         
     def create_modifier_fields(self, modifier_fields: list[str]) -> dict[str, tk.Entry]:
         """
@@ -215,12 +216,13 @@ class WeaponPage(tk.Frame):
         drug_modifier: Modifier = self.parent.pages["Drugs"].get_active_effects()
         injury_modifier: Modifier = self.parent.pages["Injuries"].get_active_effects()
         cyberware_modifier: Modifier = self.parent.pages["Cyberware"].get_active_effects()
+        combat_awareness_modifier = self.parent.pages["Combat Awareness"].get_modifier()
 
         modifier: Modifier = Modifier()
 
         if other_modifiers is None:
             other_modifiers = []
-        modifier_list = [drug_modifier, injury_modifier, cyberware_modifier, self.get_accuracy_modifier()] + other_modifiers
+        modifier_list = [drug_modifier, injury_modifier, cyberware_modifier, combat_awareness_modifier, self.get_accuracy_modifier()] + other_modifiers
         for current in modifier_list:
             modifier += current
 
@@ -236,7 +238,7 @@ class WeaponPage(tk.Frame):
         if other_checks is None:
             other_checks = []
 
-        relevant = [skill_name, stat_name, "All Actions"] + other_checks # Attacks... weaponmodifier
+        relevant = [skill_name, stat_name, "All Actions","Attack"] + other_checks # Attacks... weaponmodifier
 
         for affect in relevant:
             curr_mag, curr_reason = modifier.get_affect(affect)

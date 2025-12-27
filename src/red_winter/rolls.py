@@ -16,7 +16,7 @@ def damage_roll(app, roll:str, weapon:str, other_modifiers=None) -> None:
     for modifier in other_modifiers:
         damage_modifier += modifier
 
-    magnitudes, reasons = damage_modifier.get_affect("All Actions")
+    magnitudes, reasons = damage_modifier.get_affect("Damage")
 
     if len(reasons) > 0:
         reasons = ' (' + reasons + ')'

@@ -75,8 +75,11 @@ class CombatAwarenessPage(tk.Frame, CombatAwareness):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         CombatAwareness.__init__(self)
-
         self.parent = parent
+
+        self.combat_awareness_max_points = int(self.parent.character_sheet["Role"]["RoleRank"])
+        self.combat_awareness_available_points = self.combat_awareness_max_points
+  
         self.modifier_ui: dict[str, ModifierWidgets] = self.create_modifier_fields(self.combat_awareness_abilities)   
         
     def refresh_ui(self):

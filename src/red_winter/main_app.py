@@ -88,8 +88,9 @@ class MainApplication(tk.Frame):
         drug_modifier = self.pages["Drugs"].get_active_effects()
         injury_modifier = self.pages["Injuries"].get_active_effects()
         cyberware_modifier = self.pages["Cyberware"].get_active_effects()
+        combat_awareness_modifier = self.pages["Combat Awareness"].get_modifier()
 
-        modifier = drug_modifier + injury_modifier + cyberware_modifier
+        modifier = drug_modifier + injury_modifier + cyberware_modifier + combat_awareness_modifier
 
         magnitude_list: list[str] = []
         reason_list: list[str] = []
