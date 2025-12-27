@@ -79,8 +79,20 @@ class CombatAwarenessPage(tk.Frame, CombatAwareness):
 
         self.combat_awareness_max_points = int(self.parent.character_sheet["Role"]["RoleRank"])
         self.combat_awareness_available_points = self.combat_awareness_max_points
-  
+
+        self.available_points_ui = tk.Label(self, width=60)
+        self.available_points_ui.pack()
+
+        my_frame = tk.Frame(self, width=50, bg='black')
+        tk.Label(my_frame, text="Ability", bg='black', fg='white', width=20).pack(side='left')
+        tk.Label(my_frame, text="Points", bg='black', fg='white', width=10).pack(side='left')
+        tk.Label(my_frame, text="Effect", bg='black', fg='white', width=30).pack(side='left')
+        
+        my_frame.pack()
+
         self.modifier_ui: dict[str, ModifierWidgets] = self.create_modifier_fields(self.combat_awareness_abilities)   
+
+        self.refresh_ui()
         
     def refresh_ui(self):
         """
@@ -88,9 +100,15 @@ class CombatAwarenessPage(tk.Frame, CombatAwareness):
         
         :param self: Description
         """
+        self.available_points_ui.configure(text=f"Available Combat Awareness Points: {self.combat_awareness_available_points}/{self.combat_awareness_max_points}")
+        #update combat awareness
+
         for ability_name, ability_widgets in self.modifier_ui.items():
-            points:str = str(self.ability_points[ability_name])
-            ability_widgets["Points"].configure(text=points)
+            points:int = self.ability_points[ability_name]
+            ability_widgets["Points"].configure(text=str(points))
+            
+            note = '' if points == 0 else f'+{points} to {self.combat_awareness_abilities[ability_name][0]}'
+            ability_widgets["Notes"].configure(text=note)
 
     def update_points(self, ability_name:str, delta:int) -> None:
         """
@@ -119,11 +137,11 @@ class CombatAwarenessPage(tk.Frame, CombatAwareness):
 
             entry: ModifierWidgets = {
                 "Name" : tk.Label(modifier_frame, text=modifier_name, width=20, anchor='w'),
-                "Downtick" : tk.Button(modifier_frame, text="-", width=3, anchor='w',
+                "Downtick" : tk.Button(modifier_frame, text="-", width=3, anchor='w',bg="#ea92e1",
                       command=lambda modifier_name=modifier_name: self.update_points(modifier_name, -1)),
-                "Uptick" : tk.Button(modifier_frame, text="+", width=3, anchor='w',
+                "Uptick" : tk.Button(modifier_frame, text="+", width=3, anchor='w',bg="#91dfc6",
                       command=lambda modifier_name=modifier_name: self.update_points(modifier_name, 1)),
-                "Points" : tk.Label(modifier_frame, text=0, width=4, anchor='w'),
+                "Points" : tk.Label(modifier_frame, text=0, width=4),
                 "Notes" : tk.Label(modifier_frame, text=0, width=30, anchor='w')
             }
 
