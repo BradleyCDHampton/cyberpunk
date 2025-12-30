@@ -13,7 +13,7 @@ from .pages.cyberware_page import CyberwarePage
 from .pages.combat_awareness import CombatAwarenessPage
 from .file_manager import FilePage
 
-from .character_sheet import load_character_sheet
+from .character_sheet import load_character_sheet, save_character_sheet
 
 
 class MainApplication(tk.Frame):
@@ -24,6 +24,7 @@ class MainApplication(tk.Frame):
         # Initialize Character Sheet
         self.character_sheet_link = character_sheet_link
         self.character_sheet = load_character_sheet(self.character_sheet_link)
+        save_character_sheet(self.character_sheet)
 
         self.pages = {}
 

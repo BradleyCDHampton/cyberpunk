@@ -1,8 +1,10 @@
 
-from PyPDF2 import PdfReader
+from pypdf import PdfReader, PdfWriter
 from collections import defaultdict
 import re
 import pandas as pd
+
+from pypdf.generic import TextStringObject, NameObject
 
 maps = { "DLV" : "Drive Land Vehicle",
              "PAV" : "Pilot Air Vehicle",
@@ -22,6 +24,176 @@ maps = { "DLV" : "Drive Land Vehicle",
              "WardrobeStyle" : "Wardrobe & Style",
              "ElecSec" : "Electronics/Security Tech",
              "WeaponsTech" : "Weaponstech"}
+
+inverted_maps = {v: k for k, v in maps.items()}
+
+def save_character_sheet(character_sheet_data:dict, new_sheet_link:str="") -> None:
+ 
+    base_file_link = r"data/CpEMK_BergFormv0977.pdf"
+    
+    reader = PdfReader(open(base_file_link,'rb'))
+    writer = PdfWriter()
+
+    writer.clone_document_from_reader(reader)
+
+    updates = {}
+
+    # Category 1: Top Left
+    updates['Text Field176'] = TextStringObject(character_sheet_data['Handle'])
+    updates['Notes'] = TextStringObject("test_write_to_notes")
+
+    for field, value in character_sheet_data["Role"].items():
+        updates[field] = TextStringObject(value)
+
+    # Category 2: STATs
+    for field, value in character_sheet_data["Stats"].items():
+        updates[field] = TextStringObject(value)
+
+    # Category 3: Derived STATs
+    for field, value in character_sheet_data["Derived Stats"].items():
+        updates[field] = TextStringObject(value)
+
+    # Category 4: All Skill LVL/MOD/BASEs
+    for skill, dictionary in character_sheet_data["Skills"].items():
+
+        # If this was renamed prior to this, reverse that
+        if skill in inverted_maps.keys():
+            skill = inverted_maps[skill]
+        else:
+            skill = skill.replace(' ','')
+
+        for field, value in dictionary.items():
+            
+            curr_field = f"{field} {skill}"
+            updates[curr_field] = TextStringObject(value or '')
+
+        
+
+            # Alt 1: A skill has a known mapping that it should be renamed to.  
+        """if skill_name in maps.keys():
+            skill_name = maps[skill_name]
+
+        # Alt 2: A "custom" skill, filled by player.
+        elif ('LocalExpert' in field or 'Science' in field or
+                'PlayInstrument' in field or 'Lang' in field):
+            
+            variant_1 = "Txt_"+skill_name
+            variant_2 = "Txt "+skill_name
+
+            if variant_1 in test_fields:
+                skill_name = test_fields[variant_1]
+            elif variant_2 in test_fields:
+                skill_name = test_fields[variant_2]
+            else:
+                skill_name = test_fields[skill_name]
+        else: # Could potentially need to separate words
+            skill_name = skill_name.split()[-1]
+            pattern = re.compile(r"[A-Z][a-z]*")
+            variant_1 = re.findall(pattern, skill_name)
+            skill_name = " ".join(variant_1)
+
+        if not (skill_name == None or skill_name == ''): # Guards against empty custom skills
+            character_sheet_data["Skills"][skill_name][parameter] = value"""
+
+
+    # Category 5: Armor SP and Condition:
+
+    # Category 6: All fields related to Weapons on PG. 1
+    for index, weapon in character_sheet_data["Weapons"].items():
+        for field, value in weapon.items():
+            num: int = int(index)*5
+            match (field):
+                case "Name":
+                    num += 1
+                case "DMG":
+                    num += 2
+                case "Ammo":
+                    num += 3
+                case "ROF":
+                    num += 4
+                case "Notes":
+                    num += 5
+            if num > 35:
+                num -= 1
+            value = value or '' # None -> ''
+            updates[f"WeaponTxt{num}"] = TextStringObject(value)
+
+    # Category 7/9: IP, Ammunition
+    for field in ['IpMax','IpCurr','Ammunition']:
+        updates[field] = TextStringObject(character_sheet_data[field])
+       
+    # Category 8: Gear
+    for index, entry in character_sheet_data["Gear"].items():
+        for field, value in entry.items():            
+            value = value or ''
+            index = str(index)
+            if len(index) == 1:
+                index = '0' + index
+            updates[f"Gear{field}{index}"] = TextStringObject(value)
+
+    # Category 10: Cash
+    updates['cash20'] = TextStringObject(character_sheet_data["Cash"]["Amount"])
+    updates['Cash'] = TextStringObject(character_sheet_data["Cash"]["Notes"])
+
+    # Category 11: Cyberware & Additional Notes
+
+    # Cyberware
+    for _, options in character_sheet_data["Cyberware"].items():
+        for index, data_dictionary in options.items():
+            index = int(index)*2
+            name = data_dictionary["Name"] if "Name" in data_dictionary else ''
+            data = data_dictionary["Data"] if "Data" in data_dictionary else ''
+
+            name = name or '' # None -> ''
+            data = data or '' # None -> ''
+
+            updates[f"Text Field{index}"] = TextStringObject(name)
+            updates[f"Text Field{index+1}"] = TextStringObject(data)
+
+    # Additional Notes
+    for field, value in character_sheet_data["Additional Notes"].items():
+        updates[field] = TextStringObject(value or '')
+    
+    # Category 12: Lifepath
+    for field, value in character_sheet_data['Lifepath'].items():
+        if field == 'Enemies1':
+            field = "Ex-friendo1"
+        value = value or '' # None -> ''
+        updates[field] = TextStringObject(value)
+
+    # Category 13: HEAT
+    for field, value in character_sheet_data["Heat"].items():
+        updates[field] = TextStringObject(value or '')
+
+    # Category 14: Conditions
+    updates['Txt_Crit'] = TextStringObject(character_sheet_data['Critical Injuries'] or '')
+    updates['Txt_Addiction'] = TextStringObject(character_sheet_data['Addictions'] or '')
+
+    # Category 15: Lifestyle
+    for field, value in character_sheet_data['Lifestyle'].items():
+        value = value or ''
+        updates[field] = TextStringObject(value)
+
+    # Category 17: Skill Totals
+    for field, value in character_sheet_data['Totals'].items():
+        updates[field] = TextStringObject(value)
+
+    writer.update_page_form_field_values(None, updates)
+
+    with open(r"data/test_copy.pdf", "wb") as f:
+        writer.write(f)
+
+    """ 
+
+            
+    # Category 5: Armor SP and Condition:
+    elif ( field.startswith("SP") or 
+        field.startswith("HPS")):
+        
+        if not field.endswith("Txt"): # Hard-coded, shouldn't load
+            pass
+
+"""
 
 def load_character_sheet(character_sheet_link:str) -> dict:
         """
@@ -203,7 +375,7 @@ def load_character_sheet(character_sheet_link:str) -> dict:
 
             # Category 15: Lifestyle
             elif (field in ['Housing', 'Rent', 'Lifestyle', 'Fashion']):
-                character_sheet_data['Lifestyle'] = value
+                character_sheet_data['Lifestyle'][field] = value
 
             # Category 16: Damage Taken
             elif (field in ['DMG Taken','BulletBrawl Head', 'MeleeMartial Body',
