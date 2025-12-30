@@ -25,12 +25,11 @@ maps = { "DLV" : "Drive Land Vehicle",
              "ElecSec" : "Electronics/Security Tech",
              "WeaponsTech" : "Weaponstech"}
 
-inverted_maps = {v: k for k, v in maps.items()}
+inverted_fixed = {v: k for k, v in maps.items()}
 
-def save_character_sheet(character_sheet_data:dict, new_sheet_link:str="") -> None:
+def save_character_sheet(character_sheet_data:dict, base_file_link:str=r"data/CpEMK_BergFormv0977.pdf") -> None:
  
-    base_file_link = r"data/CpEMK_BergFormv0977.pdf"
-    
+
     reader = PdfReader(open(base_file_link,'rb'))
     writer = PdfWriter()
 
@@ -55,49 +54,22 @@ def save_character_sheet(character_sheet_data:dict, new_sheet_link:str="") -> No
 
     # Category 4: All Skill LVL/MOD/BASEs
     for skill, dictionary in character_sheet_data["Skills"].items():
+        # Create a dictionary { used_field_name : actual_field_name}, including player-defined skills
+        inverted_skills = inverted_fixed | character_sheet_data['custom_fields_map']
 
-        # If this was renamed prior to this, reverse that
-        if skill in inverted_maps.keys():
-            skill = inverted_maps[skill]
+        if skill in inverted_skills.keys():
+            skill = inverted_skills[skill]
         else:
             skill = skill.replace(' ','')
 
         for field, value in dictionary.items():
-            
             curr_field = f"{field} {skill}"
             updates[curr_field] = TextStringObject(value or '')
 
-        
-
-            # Alt 1: A skill has a known mapping that it should be renamed to.  
-        """if skill_name in maps.keys():
-            skill_name = maps[skill_name]
-
-        # Alt 2: A "custom" skill, filled by player.
-        elif ('LocalExpert' in field or 'Science' in field or
-                'PlayInstrument' in field or 'Lang' in field):
-            
-            variant_1 = "Txt_"+skill_name
-            variant_2 = "Txt "+skill_name
-
-            if variant_1 in test_fields:
-                skill_name = test_fields[variant_1]
-            elif variant_2 in test_fields:
-                skill_name = test_fields[variant_2]
-            else:
-                skill_name = test_fields[skill_name]
-        else: # Could potentially need to separate words
-            skill_name = skill_name.split()[-1]
-            pattern = re.compile(r"[A-Z][a-z]*")
-            variant_1 = re.findall(pattern, skill_name)
-            skill_name = " ".join(variant_1)
-
-        if not (skill_name == None or skill_name == ''): # Guards against empty custom skills
-            character_sheet_data["Skills"][skill_name][parameter] = value"""
-
-
     # Category 5: Armor SP and Condition:
-
+    for field, value in character_sheet_data["Armor"].items():
+        updates[field] = TextStringObject(value or '')
+    
     # Category 6: All fields related to Weapons on PG. 1
     for index, weapon in character_sheet_data["Weapons"].items():
         for field, value in weapon.items():
@@ -135,9 +107,7 @@ def save_character_sheet(character_sheet_data:dict, new_sheet_link:str="") -> No
     updates['cash20'] = TextStringObject(character_sheet_data["Cash"]["Amount"])
     updates['Cash'] = TextStringObject(character_sheet_data["Cash"]["Notes"])
 
-    # Category 11: Cyberware & Additional Notes
-
-    # Cyberware
+    # Category 11.1: Cyberware
     for _, options in character_sheet_data["Cyberware"].items():
         for index, data_dictionary in options.items():
             index = int(index)*2
@@ -150,7 +120,7 @@ def save_character_sheet(character_sheet_data:dict, new_sheet_link:str="") -> No
             updates[f"Text Field{index}"] = TextStringObject(name)
             updates[f"Text Field{index+1}"] = TextStringObject(data)
 
-    # Additional Notes
+    # Category 11.2: Additional Notes
     for field, value in character_sheet_data["Additional Notes"].items():
         updates[field] = TextStringObject(value or '')
     
@@ -178,22 +148,20 @@ def save_character_sheet(character_sheet_data:dict, new_sheet_link:str="") -> No
     for field, value in character_sheet_data['Totals'].items():
         updates[field] = TextStringObject(value)
 
+    # Category 18: Player-Defined Skills
+    for idle_label, berg_label in character_sheet_data["custom_fields_map"].items():
+        updates[f"{berg_label}"] = idle_label or ''
+        updates[f"Txt {berg_label}"] = idle_label or ''
+        updates[f"Txt_{berg_label}"] = idle_label or ''
+
     writer.update_page_form_field_values(None, updates)
 
-    with open(r"data/test_copy.pdf", "wb") as f:
+    if base_file_link == r"data/CpEMK_BergFormv0977.pdf":
+        base_file_link = r"data/CpEMK_BergFormv0977_modified.pdf"
+
+    with open(base_file_link, "wb") as f:
         writer.write(f)
 
-    """ 
-
-            
-    # Category 5: Armor SP and Condition:
-    elif ( field.startswith("SP") or 
-        field.startswith("HPS")):
-        
-        if not field.endswith("Txt"): # Hard-coded, shouldn't load
-            pass
-
-"""
 
 def load_character_sheet(character_sheet_link:str) -> dict:
         """
@@ -210,6 +178,7 @@ def load_character_sheet(character_sheet_link:str) -> dict:
         #print(test_fields.keys())
 
         player_defined_fields:list[str] = []
+        player_field_maps: dict[str,str] = {}
         character_sheet_data = defaultdict(dict)
 
         for category in ['Skills','Weapons','Gear','Cyberware','Totals']:
@@ -278,10 +247,8 @@ def load_character_sheet(character_sheet_link:str) -> dict:
             # Category 5: Armor SP and Condition:
             elif ( field.startswith("SP") or 
                 field.startswith("HPS")):
-                
-                if not field.endswith("Txt"): # Hard-coded, shouldn't load
-                    pass
-
+                character_sheet_data["Armor"][field] = value
+   
             # Category 6: All fields related to Weapons on PG. 1
             elif field.startswith("WeaponTxt"):
                 
@@ -391,12 +358,10 @@ def load_character_sheet(character_sheet_link:str) -> dict:
                 'Science' in field or
                 'PlayInstrument' in field or
                 'Lang' in field):
-                
                 player_defined_fields.append(field)
+                player_field_maps[value] = field
 
-            # Uncategorized: print as debug
-            else:
-                print(f"{field} \t\t {value}")
+        character_sheet_data['custom_fields_map'] = player_field_maps
 
         # SKILLs/STATS
         stat_associations = pd.read_csv(r"data/skills.csv")
