@@ -4,7 +4,8 @@ from copy import deepcopy
 from typing import Self
 
 class Modifier:
-    """Represents a collection of affects for a set of Modifiers, or collection of .
+    """
+    Represents a collection of affects for a set of Modifiers.
 
     Each Modifier stores effects as key-value pairs, where the key is the
     affected skill/stat/check and magnitude of the modification.
@@ -13,8 +14,9 @@ class Modifier:
         data (dict[str, int]): The internal dictionary storing modifiers.
     """
 
-    def __init__(self, modifier_name="", modifier_list=None, ignore_list=None):
-        """Creates a new Modifier object
+    def __init__(self, modifier_name:str="", modifier_list=None, ignore_list=None):
+        """
+        Creates a new Modifier object
         
         :param modifier_name: The name of the modifier
         :param modifier_list: Optional. If not provided, represents an empty modifier list. 
@@ -71,11 +73,13 @@ class Modifier:
         return "\n".join(mods)
     
 
-    def get_affect(self, affect: str) -> tuple[str, str]:
+    def get_affect(self, *affects: str) -> tuple[str, str]:
         """
         Generates the strings for a Modifier
         
-        :param affect: The skill/stat/action that is being looked up.
+        :param affects: The skill/stat/action that is being looked up.
+            This can accept any number of affects to check for.
+            (e.g. "All Actions", "REF", "Archery")
 
         Returns:
             A tuple of two strings. The first being a string concatenation of all
@@ -88,12 +92,14 @@ class Modifier:
         nums: list[str] = []
         reasons: list[str] = []
 
-        for reason, num in self.data[affect]:
-            if reason not in self.ignore_list:
-                if num >= 0:
-                    nums.append(f"+{num}")
-                else:
-                    nums.append(f"{num}")
-                reasons.append(reason)
+        for affect in affects:
+            for reason, num in self.data[affect]:
+                if reason not in self.ignore_list:
+                    if num >= 0:
+                        nums.append(f"+{num}")
+                    else:
+                        nums.append(f"{num}")
+                    reasons.append(reason)
                 
-        return "".join(nums), ", ".join(reasons)    
+        return "".join(nums), ", ".join(reasons)
+    

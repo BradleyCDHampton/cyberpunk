@@ -6,9 +6,6 @@ from ..modifier import Modifier
 colors = ["#A0D0E2", "#BDADE6", "#9F5BFF", "#EA7D3A", "#B3CE1B"]
 
 
-
-
-
 class NetrunningPage(tk.Frame):
 
     def __init__(self, parent, *args, **kwargs):

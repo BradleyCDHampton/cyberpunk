@@ -66,6 +66,22 @@ class MainApplication(tk.Frame):
         self.clipboard_echo.config(text=discord_command)
         self.clipboard_echo.pack(side='bottom', after=self.navigation)
 
+    @property
+    def modifier(self) -> Modifier:
+        """
+        Creates a combined Modifier from all of the configurations on each page.
+        
+        Returns:
+            A single Modifier object, containing all of the affects of every
+            drug/cyberware/cyberware the character is under the effect of.
+        """
+
+        combined_modifier: Modifier = self.pages["Drugs"].get_active_effects()
+        combined_modifier += self.pages["Injuries"].get_active_effects()
+        combined_modifier += self.pages["Cyberware"].get_active_effects()
+        combined_modifier += self.pages["Combat Awareness"].get_modifier()
+
+        return combined_modifier
    
     def basic_skill_check(self, skill_name) -> None:
         """
@@ -73,29 +89,8 @@ class MainApplication(tk.Frame):
         
         :param skill_name: The skill/action we are checking
         """
-        stat_name = self.character_sheet["Skills"][skill_name]["STAT"]
-        drug_modifier = self.pages["Drugs"].get_active_effects()
-        injury_modifier = self.pages["Injuries"].get_active_effects()
-        cyberware_modifier = self.pages["Cyberware"].get_active_effects()
-        combat_awareness_modifier = self.pages["Combat Awareness"].get_modifier()
-
-        modifier = drug_modifier + injury_modifier + cyberware_modifier + combat_awareness_modifier
-
-        magnitude_list: list[str] = []
-        reason_list: list[str] = []
-
-        relevant = [skill_name, stat_name, "All Actions"]
-
-        for affect in relevant:
-            curr_mag, curr_reason = modifier.get_affect(affect)
-            magnitude_list.append(curr_mag)
-            reason_list.append(curr_reason)
-
-        magnitudes: str = "".join(magnitude_list)
-
-        reason_list = [r for r in reason_list if r != ""]
-        reasons: str = ",".join(reason_list)        
-        
+        stat_name = self.character_sheet["Skills"][skill_name]["STAT"]        
+        magnitudes, reasons = self.modifier.get_affect(skill_name, stat_name, "All Actions")
 
         level: int = int(self.character_sheet["Skills"][skill_name]["BASE"])
         mod: str = self.character_sheet["Skills"][skill_name]["MOD"]

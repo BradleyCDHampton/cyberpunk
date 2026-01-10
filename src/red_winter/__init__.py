@@ -16,8 +16,6 @@ if __name__ == "__main__":
 
 """
 
-
-
 Flaws:
     * Certain Drugs/effects cannot lower MOVE to 0 or a STAT above 8
 

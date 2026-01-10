@@ -209,52 +209,26 @@ class WeaponPage(tk.Frame):
             return
 
         skill_name = skills_for_weapons[weapons_list['type'].iloc[0]]
-
-        # Same logic from before
-
         stat_name = self.parent.character_sheet["Skills"][skill_name]["STAT"]
-        drug_modifier: Modifier = self.parent.pages["Drugs"].get_active_effects()
-        injury_modifier: Modifier = self.parent.pages["Injuries"].get_active_effects()
-        cyberware_modifier: Modifier = self.parent.pages["Cyberware"].get_active_effects()
-        combat_awareness_modifier = self.parent.pages["Combat Awareness"].get_modifier()
 
-        modifier: Modifier = Modifier()
-
-        if other_modifiers is None:
-            other_modifiers = []
-        modifier_list = [drug_modifier, injury_modifier, cyberware_modifier, combat_awareness_modifier, self.get_accuracy_modifier()] + other_modifiers
-        for current in modifier_list:
-            modifier += current
+        modifier: Modifier = self.parent.modifier
 
         #TODO make this nicer, this is a jury rig for rn
         if "EQ" in weapon['Notes']:
-            modifier += Modifier("EQ", [("All Actions", 1)])
+            modifier += Modifier("EQ", [("Attack", 1)])
         if "Smartlink" in weapon['Notes']:
-            modifier += Modifier("Smartlink", [("All Actions", 1)])
-
-        magnitude_list: list[str] = []
-        reason_list: list[str] = []
+            modifier += Modifier("Smartlink", [("Attack", 1)])
 
         if other_checks is None:
             other_checks = []
 
         relevant = [skill_name, stat_name, "All Actions","Attack"] + other_checks # Attacks... weaponmodifier
-
-        for affect in relevant:
-            curr_mag, curr_reason = modifier.get_affect(affect)
-            magnitude_list.append(curr_mag)
-            reason_list.append(curr_reason)
-
-        magnitudes: str = "".join(magnitude_list)
-
-        reason_list = [r for r in reason_list if r != ""]
-        reasons: str = ",".join(reason_list)        
+        magnitudes, reasons = modifier.get_affect(*relevant)    
         
         base = self.parent.character_sheet["Skills"][skill_name]["BASE"]
 
         if len(reasons) > 0:
             reasons = ' (' + reasons + ')'
-
 
         discord_command = f"!r 1d10+{base}{magnitudes} {action} w/ {weapon_name}{reasons}"
         self.parent.update_clipboard(discord_command)
