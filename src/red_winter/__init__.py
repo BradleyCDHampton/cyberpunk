@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from .main_app import MainApplication
+from .tk_pages.main_app import MainApplication
 
 #######################################################################################################
 

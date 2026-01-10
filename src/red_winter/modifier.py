@@ -4,7 +4,7 @@ from copy import deepcopy
 from typing import Self
 
 class Modifier:
-    """Represents a collection of affects for a single Modifier.
+    """Represents a collection of affects for a set of Modifiers, or collection of .
 
     Each Modifier stores effects as key-value pairs, where the key is the
     affected skill/stat/check and magnitude of the modification.
