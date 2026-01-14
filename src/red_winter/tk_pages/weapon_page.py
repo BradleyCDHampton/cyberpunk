@@ -143,25 +143,6 @@ class WeaponPage(tk.Frame):
 
         return result
 
-    """    def get_damage_modifier(self) -> Modifier:
-        
-        Generates a Modifier for how much bonus damage that will happen on
-        an attack's successful hit
-
-        Returns:
-            The Modifier that affects the damage that will be rolled
-            (probably just Spot Weakness)
-
-        result = Modifier()
-        try:
-            value = self.modifier_data["Spot Weakness"].get()
-            if not (value is None or value == ''):
-                result += Modifier("Spot Weakness", [("All Actions", int(value))])
-        except:
-            print("Error parsing accuracy Modifier")
-            result = Modifier()
-
-        return result"""
         
     def create_modifier_fields(self, modifier_fields: list[str]) -> dict[str, tk.Entry]:
         """
@@ -214,10 +195,15 @@ class WeaponPage(tk.Frame):
         modifier: Modifier = self.parent.modifier
 
         #TODO make this nicer, this is a jury rig for rn
+
+        if other_modifiers is not None:
+            for curr in other_modifiers:
+                modifier += curr
         if "EQ" in weapon['Notes']:
             modifier += Modifier("EQ", [("Attack", 1)])
         if "Smartlink" in weapon['Notes']:
             modifier += Modifier("Smartlink", [("Attack", 1)])
+        modifier += self.get_accuracy_modifier()
 
         if other_checks is None:
             other_checks = []
